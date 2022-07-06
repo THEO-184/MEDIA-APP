@@ -1,4 +1,5 @@
 import express from "express";
+import "express-async-errors";
 import dotenv from "dotenv";
 dotenv.config();
 import bodyParser from "body-parser";
@@ -13,12 +14,10 @@ import Template from "./template";
 import expressErrorMiddleware from "./middlewares/express-error";
 
 const app = express();
+// routes imports
+import userRoutes from "./routes/user.routes";
 
-app.get("/", (req, res) => {
-	res.status(StatusCodes.OK).send(Template());
-});
-
-// middlewares
+//
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -26,6 +25,14 @@ app.use(cookieParser());
 app.use(compression());
 app.use(cors());
 app.use(helmet());
+
+app.get("/", (req, res) => {
+	res.status(StatusCodes.OK).send(Template());
+});
+
+app.use("/api/v1/users", userRoutes);
+
+// middlewares
 
 // middlewares
 
