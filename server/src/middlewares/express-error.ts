@@ -18,6 +18,10 @@ const expressErrorMiddleware = (
 			.join(",");
 		customErr.statusCode = 400;
 	}
+	if (err.name === "UnauthorizedError") {
+		customErr.msg = `${err.name} : ${err.message}`;
+		customErr.statusCode = 401;
+	}
 	if (err.code && err.code === 11000) {
 		customErr.msg = `Duplicate value entered for ${Object.keys(
 			err.keyValue

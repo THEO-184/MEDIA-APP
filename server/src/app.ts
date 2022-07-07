@@ -16,12 +16,12 @@ import expressErrorMiddleware from "./middlewares/express-error";
 const app = express();
 // routes imports
 import userRoutes from "./routes/user.routes";
-
+import authRoutes from "./routes/auth.routes";
 //
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.JWT_SECRET!));
 app.use(compression());
 app.use(cors());
 app.use(helmet());
@@ -31,6 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 // middlewares
 

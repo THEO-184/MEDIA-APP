@@ -1,14 +1,15 @@
 import mongoose, { Schema, model } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
-import { UserInterface, UserMethods, UserModelType } from "../types/userTypes";
+import { UserDocument, UserInput } from "../types/userTypes";
 
-const UserSchema = new Schema<UserInterface, UserModelType, UserMethods>(
+const UserSchema = new Schema(
 	{
 		name: {
 			type: String,
 			trim: true,
-			require: "Name is required",
+			required: true,
+			minlength: [3, "name must be atleast characters"],
 		},
 		email: {
 			type: String,
@@ -28,15 +29,22 @@ const UserSchema = new Schema<UserInterface, UserModelType, UserMethods>(
 	{ timestamps: true }
 );
 
-const User = model<UserInterface>("User", UserSchema);
+UserSchema.pre("save", async function (next) {
+	let user = this as UserDocument;
+	if (!user.isModified("password")) return next();
+	const salt = await bcrypt.genSalt(10);
+	const hash = await bcrypt.hash(this.password, salt);
+	this.password = hash;
+	return next();
+});
 
-UserSchema.method(
-	"comparePassword",
-	function comparePassword(password: string) {
-		let user = this as UserInterface;
-		const isMatched = bcrypt.compare(password, user.password);
-		return isMatched;
-	}
-);
+UserSchema.methods.comparePassword = async function (
+	password: string
+): Promise<boolean> {
+	let user = this as UserDocument;
+	const isMatch = bcrypt.compare(password, user.password);
+	return isMatch;
+};
 
+const User = model<UserDocument>("User", UserSchema);
 export default User;
