@@ -8,6 +8,7 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import { StatusCodes } from "http-status-codes";
+import path from "path";
 // local imports
 import connectDb from "./db/connectDb";
 import Template from "./template";
@@ -18,6 +19,7 @@ const app = express();
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
 //
+const CURRENT_WORKING_DIR = process.cwd();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -30,6 +32,7 @@ app.get("/", (req, res) => {
 	res.status(StatusCodes.OK).send(Template());
 });
 
+// app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "public")));
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);
 
