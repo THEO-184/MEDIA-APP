@@ -4,15 +4,25 @@ import Img from "../assets/images/unicornbike.jpg";
 
 const Card = () => {
 	return (
-		<main className="max-w-screen-sm max-h-96 m-auto mt-5">
-			<Typography variant={"h6"} color="text-primary-main">
-				Home Page
-			</Typography>
-			<div className="max-h-96 w-full">
-				<img src={Img} alt="img" className="max-w-full max-h-full" />
+		<main className="max-w-screen-sm  m-auto mt-5 bg-slate-50 rounded-md shadow-md">
+			<div className="h-14 p-4">
+				<Typography
+					variant={"h6"}
+					className="text-primary-dark font-bold text-base px-1"
+				>
+					Home Page
+				</Typography>
 			</div>
-			<div>
-				<Typography>Welcome to the MERN Skeleton home page.</Typography>
+			<div className="h-auto w-full">
+				<img src={Img} alt="img" className="w-full h-full" />
+			</div>
+			<div className="h-14 p-4">
+				<Typography
+					variant={"h6"}
+					className="text-secondary-contrastText font-semibold text-base  px-1"
+				>
+					Welcome to the MERN Skeleton home page.
+				</Typography>
 			</div>
 		</main>
 	);

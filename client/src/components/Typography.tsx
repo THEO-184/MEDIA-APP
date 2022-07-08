@@ -6,7 +6,7 @@ type TypographyOwnProps<T extends React.ElementType> = {
 };
 
 type TextColors = {
-	color?: PrimaryColors | "text-primary-openTitle";
+	className?: string;
 };
 
 type PropsToOmit<
@@ -23,12 +23,12 @@ type TypographyType<T extends React.ElementType, Props = {}> = Omit<
 const Typography = <T extends React.ElementType>({
 	variant,
 	children,
-	color,
+	className,
 	...restProps
 }: TypographyType<T, TextColors>) => {
 	const Component = variant || "h6";
 	return (
-		<Component {...restProps} className={`${color}`}>
+		<Component {...restProps} className={`${className}`}>
 			{children}
 		</Component>
 	);
