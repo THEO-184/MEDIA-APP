@@ -1,8 +1,13 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./core/Home";
+
 function App() {
 	return (
-		<div className="App">
-			<h1 className="text-slate-50">React App</h1>
-		</div>
+		<Router>
+			<Routes>
+				<Route path="/" element={<Home />} />;
+			</Routes>
+		</Router>
 	);
 }
 
