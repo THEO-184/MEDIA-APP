@@ -11,8 +11,11 @@ export const createUser: RequestHandler<any, any, UserDocument> = async (
 	res
 ) => {
 	const user = await createUserService(req.body);
+	const { name, email, _id, createdAt } = user;
 
-	res.status(StatusCodes.CREATED).json({ status: true, user });
+	res
+		.status(StatusCodes.CREATED)
+		.json({ status: true, user: { name, email, _id, createdAt } });
 };
 
 export const getAllUsers: RequestHandler = async (req, res) => {
@@ -47,7 +50,7 @@ export const getCurrentUser: RequestHandler<{ id: string }> = async (
 	checkPermission(req.user, user);
 	res
 		.status(StatusCodes.OK)
-		.json({ user: { email: user.email, name: user.name } });
+		.json({ user: { email: user.email, name: user.name, id: user._id } });
 };
 
 export const updateUser: RequestHandler<

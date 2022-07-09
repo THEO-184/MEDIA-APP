@@ -4,7 +4,17 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import "./index.css";
 import App from "./App";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+			refetchOnMount: false,
+			retry: false,
+			staleTime: 1000 * 60 * 10,
+			refetchOnReconnect: true,
+		},
+	},
+});
 
 const root = ReactDOM.createRoot(
 	document.getElementById("root") as HTMLElement
