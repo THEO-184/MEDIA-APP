@@ -6,7 +6,7 @@ export interface User {
 
 export interface FetchUsers {
 	count: number;
-	users: readonly User[];
+	users: User[];
 }
 
 export interface CreateUserProps extends Omit<User, "_id"> {

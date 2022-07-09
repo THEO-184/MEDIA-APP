@@ -4,6 +4,6 @@
 
 @layer base {
 	li {
-		@apply list-none;
+		@apply list-none hover:text-blue-200;
 	}
 }
