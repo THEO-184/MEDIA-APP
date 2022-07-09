@@ -9,7 +9,7 @@ interface Props {
 
 const Card = (props: Props) => {
 	return (
-		<main className="max-w-screen-sm  m-auto mt-5 bg-slate-50 rounded-md shadow-md">
+		<main className="w-11/12  m-auto mt-5 bg-slate-50 rounded-md shadow-md max-h-screen overflow-hidden">
 			<div className="h-14 p-4">
 				<Typography
 					variant={"h6"}
@@ -18,7 +18,7 @@ const Card = (props: Props) => {
 					{props.title}
 				</Typography>
 			</div>
-			<div className="h-auto w-full">
+			<div className="w-full h-[500px]">
 				<img src={Img} alt="img" className="w-full h-full" />
 			</div>
 			<div className="h-14 p-4">
