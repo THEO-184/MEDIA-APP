@@ -1,30 +1,56 @@
 import React, { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+import { IoMdContact } from "react-icons/io";
+import { BsArrowRight } from "react-icons/bs";
 import Card from "../components/Card";
 import Typography from "../components/Typography";
-import { useFetchUsersQuery } from "../common/queries/api-user";
 import { FetchUsers, User } from "../common/interfaces/api-interfaces";
+import api, { FetchAllUsers } from "../common/queries/api-user";
+import Box from "../components/Box";
+import { Link } from "react-router-dom";
 
 const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
-	const { data, isLoading, error } = useFetchUsersQuery();
-	console.log(data);
+	const { isLoading, data, error } = useQuery("/users", FetchAllUsers, {
+		onSuccess(res) {
+			setUsers(res.users);
+		},
+	});
 
-	if (isLoading) {
-		return <h1>isLoading...</h1>;
+	if (error instanceof Error) {
+		return <div>An error occured: ${error.message}</div>;
 	}
 
 	return (
 		<div>
 			<Card title="All Users">
-				{data?.data.users.map((user) => {
-					return (
-						<div key={user._id}>
-							<Typography size="base" color="primary-dark">
-								{user.name}
-							</Typography>
-						</div>
-					);
-				})}
+				{isLoading ? (
+					<h1>Loading..</h1>
+				) : (
+					users.map((user) => {
+						return (
+							<Box key={user._id}>
+								<Link to={`/users/${user._id}`}>
+									<Box className="flex items-center justify-between">
+										<Box className="flex items-center">
+											<IoMdContact size={"70"} />
+											<Typography
+												size="2xl"
+												color="primary-dark"
+												className="ml-5"
+											>
+												{user.name}
+											</Typography>
+										</Box>
+										<Box className="cursor-pointer">
+											<BsArrowRight size={"50"} />
+										</Box>
+									</Box>
+								</Link>
+							</Box>
+						);
+					})
+				)}
 			</Card>
 		</div>
 	);

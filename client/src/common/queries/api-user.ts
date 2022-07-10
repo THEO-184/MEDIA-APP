@@ -13,16 +13,9 @@ const api = axios.create({
 	},
 });
 
-export const useFetchUsersQuery = () => {
-	return useQuery(
-		"fetch all users",
-		async () => {
-			return await api.get<FetchUsers>("/users");
-		},
-		{
-			staleTime: Infinity,
-		}
-	);
+export const FetchAllUsers = async (): Promise<FetchUsers> => {
+	const res = await api.get("/users");
+	return res?.data;
 };
 
 export const useCreatUserQuery = (data: CreateUserProps) => {

@@ -13,6 +13,7 @@
 		"axios": "^0.27.2",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-icons": "^4.4.0",
 		"react-query": "^3.39.1",
 		"react-router-dom": "^6.3.0",
 		"react-scripts": "5.0.1",
@@ -45,6 +46,7 @@
 	},
 	"devDependencies": {
 		"@types/axios": "^0.14.0",
+		"@types/react-icons": "^3.0.0",
 		"@types/react-query": "^1.2.9",
 		"autoprefixer": "^10.4.7",
 		"postcss": "^8.4.14",
