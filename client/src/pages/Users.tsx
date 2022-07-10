@@ -8,6 +8,7 @@ import { FetchUsers, User } from "../common/interfaces/api-interfaces";
 import api, { FetchAllUsers } from "../common/queries/api-user";
 import Box from "../components/Box";
 import { Link } from "react-router-dom";
+import Container from "../components/Container";
 
 const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
@@ -22,8 +23,8 @@ const Users = () => {
 	}
 
 	return (
-		<div>
-			<Card title="All Users">
+		<Container>
+			<Card title="All Users" width="w-1/2">
 				{isLoading ? (
 					<h1>Loading..</h1>
 				) : (
@@ -31,7 +32,9 @@ const Users = () => {
 						return (
 							<Box key={user._id}>
 								<Link to={`/users/${user._id}`}>
-									<Box className="flex items-center justify-between">
+									<Box
+										className={`flex items-center justify-between hover:bg-slate-50`}
+									>
 										<Box className="flex items-center">
 											<IoMdContact size={"70"} />
 											<Typography
@@ -52,7 +55,7 @@ const Users = () => {
 					})
 				)}
 			</Card>
-		</div>
+		</Container>
 	);
 };
 

@@ -6,4 +6,7 @@
 	li {
 		@apply list-none hover:text-blue-200;
 	}
+	body {
+		@apply bg-slate-100;
+	}
 }

@@ -5,11 +5,16 @@ interface Props {
 	title?: string;
 	description?: string;
 	children: React.ReactNode;
+	width?: string;
 }
 
 const Card = (props: Props) => {
 	return (
-		<main className="w-11/12 p-4 m-auto mt-5 bg-slate-50 rounded-md shadow-md max-h-screen overflow-hidden">
+		<main
+			className={`${
+				props.width ? props.width : "w-full"
+			} p-4 bg-white rounded-md m-auto  shadow-lg shadow-gray-600`}
+		>
 			<div className="h-14">
 				<Typography
 					variant={"h4"}
@@ -22,7 +27,7 @@ const Card = (props: Props) => {
 			</div>
 			{props.children}
 			{props.description && (
-				<div className="h-14 p-4">
+				<div className="h-14 py-4">
 					<Typography
 						variant={"h6"}
 						className="text-secondary-contrastText font-semibold text-base  px-1"
