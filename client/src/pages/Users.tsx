@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { IoMdContact } from "react-icons/io";
 import { BsArrowRight } from "react-icons/bs";
+import { Link } from "react-router-dom";
+
+// ==== LOCAL IMPORTS ===;
 import Card from "../components/Card";
 import Typography from "../components/Typography";
 import { FetchUsers, User } from "../common/interfaces/api-interfaces";
 import api, { FetchAllUsers } from "../common/queries/api-user";
 import Box from "../components/Box";
-import { Link } from "react-router-dom";
 import Container from "../components/Container";
 
 const Users = () => {

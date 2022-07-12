@@ -1,10 +1,10 @@
 import React from "react";
 // button can be a link or buttom
-type ButtonProps = JSX.IntrinsicElements["button"] & {
+type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
 	variant?: "outlined" | "filled" | "standard";
 };
 
-type AnchorProps = JSX.IntrinsicElements["a"] & {
+type AnchorProps = React.ComponentPropsWithoutRef<"a"> & {
 	variant?: "outlined" | "filled" | "standard";
 };
 

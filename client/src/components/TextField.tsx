@@ -13,7 +13,7 @@ const TextField = (props: Props) => {
 				variant === "outlined"
 					? "border-2 border-solid border-blue-600 focus:outline-none"
 					: variant === "filled"
-					? "bg-slate-200 border-b-2 border-b-blue-500 focus:outline-none"
+					? "bg-slate-100 border-b-2 border-b-blue-500 focus:outline-none"
 					: "border-b-2 border-b-blue-500 focus:outline-none"
 			}  w-full h-10 p-2 mx-auto block mb-3 placeholder:text-left placeholder:text-slate-700`}
 		/>
