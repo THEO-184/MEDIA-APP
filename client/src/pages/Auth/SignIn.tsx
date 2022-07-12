@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import { useMutation } from "react-query";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+// ====  LOCAL IMPORTS ====
 import Box from "../../components/Box";
 import Button from "../../components/Button";
 import Card from "../../components/Card";
 import Container from "../../components/Container";
 import TextField from "../../components/TextField";
+import { CreateUserProps } from "../../common/interfaces/api-interfaces";
+import { useCreatUserQuery } from "../../common/queries/api-user";
 
 const FormSchema = z.object({
 	name: z
@@ -24,16 +28,29 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 const SignIn = () => {
+	const [userData, setUserData] = useState<CreateUserProps>(
+		{} as CreateUserProps
+	);
 	const {
 		handleSubmit,
 		control,
-		formState: { errors, isSubmitting },
+		formState: { errors },
 	} = useForm<FormData>({
 		resolver: zodResolver(FormSchema),
 	});
 
 	// send data to backend
-	const onSubmit: SubmitHandler<FormData> = async (data) => console.log(data);
+	const { isLoading, error, mutate } = useCreatUserQuery();
+
+	if (error instanceof Error) {
+		return <div>error occured: {error.message}</div>;
+	}
+
+	// send data to backend
+	const onSubmit: SubmitHandler<FormData> = (data) => {
+		setUserData(data);
+		mutate(data);
+	};
 
 	return (
 		<Container>
@@ -43,7 +60,7 @@ const SignIn = () => {
 						name="name"
 						control={control}
 						render={({ field }) => (
-							<TextField {...field} variant="filled" disabled={isSubmitting} />
+							<TextField {...field} variant="filled" disabled={isLoading} />
 						)}
 					/>
 					{errors.name && (
@@ -53,7 +70,7 @@ const SignIn = () => {
 						name="email"
 						control={control}
 						render={({ field }) => (
-							<TextField {...field} variant="filled" disabled={isSubmitting} />
+							<TextField {...field} variant="filled" disabled={isLoading} />
 						)}
 					/>
 					{errors.email && (
@@ -64,7 +81,7 @@ const SignIn = () => {
 						name="password"
 						control={control}
 						render={({ field }) => (
-							<TextField {...field} variant="filled" disabled={isSubmitting} />
+							<TextField {...field} variant="filled" disabled={isLoading} />
 						)}
 					/>
 					{errors.password && (
@@ -77,9 +94,9 @@ const SignIn = () => {
 						<Button
 							variant="filled"
 							onClick={handleSubmit(onSubmit)}
-							disabled={isSubmitting}
+							disabled={isLoading}
 						>
-							SIGN UP
+							{isLoading ? "creating user" : "SIGN UP"}
 						</Button>
 					</Box>
 				</form>

@@ -8,17 +8,18 @@ import { Link } from "react-router-dom";
 import Card from "../components/Card";
 import Typography from "../components/Typography";
 import { FetchUsers, User } from "../common/interfaces/api-interfaces";
-import api, { FetchAllUsers } from "../common/queries/api-user";
+import { FetchAllUsers } from "../services/user.services";
 import Box from "../components/Box";
 import Container from "../components/Container";
+import { useFetchAllUsers } from "../common/queries/api-user";
 
 const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
-	const { isLoading, data, error } = useQuery("/users", FetchAllUsers, {
-		onSuccess(res) {
-			setUsers(res.users);
-		},
-	});
+
+	const onSuccess = (res: FetchUsers) => {
+		setUsers(res.users);
+	};
+	const { isLoading, data, error } = useFetchAllUsers(onSuccess);
 
 	if (error instanceof Error) {
 		return <div>An error occured: ${error.message}</div>;
