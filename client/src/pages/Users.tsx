@@ -12,9 +12,14 @@ import { FetchAllUsers } from "../services/user.services";
 import Box from "../components/Box";
 import Container from "../components/Container";
 import { useFetchAllUsers } from "../common/queries/api-user";
+import { toast } from "react-toastify";
 
 const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
+
+	useEffect(() => {
+		toast("sdksdsdj");
+	});
 
 	const onSuccess = (res: FetchUsers) => {
 		setUsers(res.users);

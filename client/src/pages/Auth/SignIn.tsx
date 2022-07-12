@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useMutation } from "react-query";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -10,7 +10,7 @@ import Button from "../../components/Button";
 import Card from "../../components/Card";
 import Container from "../../components/Container";
 import TextField from "../../components/TextField";
-import { CreateUserProps } from "../../common/interfaces/api-interfaces";
+import { CreateUser } from "../../common/interfaces/api-interfaces";
 import { useCreatUserQuery } from "../../common/queries/api-user";
 
 const FormSchema = z.object({
@@ -28,19 +28,29 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 const SignIn = () => {
-	const [userData, setUserData] = useState<CreateUserProps>(
-		{} as CreateUserProps
-	);
+	const [userData, setUserData] = useState<CreateUser>({} as CreateUser);
 	const {
 		handleSubmit,
 		control,
+		reset,
 		formState: { errors },
 	} = useForm<FormData>({
 		resolver: zodResolver(FormSchema),
 	});
 
-	// send data to backend
-	const { isLoading, error, mutate } = useCreatUserQuery();
+	//
+
+	useEffect(() => {
+		toast("djsdsjdns");
+	}, []);
+
+	const onSuccess = (res: CreateUser) => {
+		setUserData(res);
+	};
+
+	// create user
+	const { isLoading, error, mutate, isSuccess, isError } =
+		useCreatUserQuery(onSuccess);
 
 	if (error instanceof Error) {
 		return <div>error occured: {error.message}</div>;
@@ -48,7 +58,7 @@ const SignIn = () => {
 
 	// send data to backend
 	const onSubmit: SubmitHandler<FormData> = (data) => {
-		setUserData(data);
+		toast.error("sdsddj");
 		mutate(data);
 	};
 
@@ -101,6 +111,7 @@ const SignIn = () => {
 					</Box>
 				</form>
 			</Card>
+			<ToastContainer />
 		</Container>
 	);
 };

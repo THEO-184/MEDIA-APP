@@ -19,8 +19,10 @@ export const useFetchAllUsers = (onSuccess: (res: FetchUsers) => void) => {
 	return useQuery("/users", FetchAllUsers, { onSuccess });
 };
 
-export const useCreatUserQuery = () => {
-	return useMutation("create user", createUser);
+export const useCreatUserQuery = (onSuccess: (res: CreateUser) => void) => {
+	return useMutation("/users", createUser, {
+		onSuccess,
+	});
 };
 
 export const useReadUserProfileQuery = (params: { id: string }) => {
