@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
@@ -11,10 +10,14 @@ import Button from "../../components/Button";
 import Card from "../../components/Card";
 import Container from "../../components/Container";
 import TextField from "../../components/TextField";
-import { CreateUser, User } from "../../common/interfaces/api-interfaces";
-import { useLoginUser } from "../../common/queries/api-user";
+import { CreateUser } from "../../common/interfaces/api-interfaces";
+import { useCreatUserQuery } from "../../common/queries/api-user";
 
 const FormSchema = z.object({
+	name: z
+		.string()
+		.min(3, "name must be atleast 3 characters")
+		.max(30, "name must be atmost 30 characters"),
 	email: z.string().email(),
 	password: z
 		.string()
@@ -26,7 +29,7 @@ type FormData = z.infer<typeof FormSchema>;
 
 type ServerEr = { msg: string };
 
-const SignIn = () => {
+const SignUp = () => {
 	const [userData, setUserData] = useState<CreateUser>({} as CreateUser);
 	const {
 		handleSubmit,
@@ -45,25 +48,25 @@ const SignIn = () => {
 	};
 
 	// create user
-	const { data, isLoading, isError, mutate } = useLoginUser(onSuccess);
+	const { data, isLoading, isError, mutate } = useCreatUserQuery(onSuccess);
 
 	if (isError) {
-		toast.error("Error while logging in user", {
+		toast.error("user already exists", {
 			delay: 1000 * 10,
 		});
 	}
 
 	if (data) {
-		toast.success(`Hello ${data.user.name} , you are succesfully logged in`);
-		localStorage.setItem("user", JSON.stringify(data.user));
-		console.log(data.user);
-		return <Navigate to={"/"} />;
+		toast.success(
+			`user with id : ${data.user._id} succesfully created and name ${data.user.name}`
+		);
 	}
 
 	// send data to backend
 	const onSubmit: SubmitHandler<FormData> = (data) => {
 		mutate(data);
 		reset({
+			name: "",
 			email: "",
 			password: "",
 		});
@@ -71,8 +74,23 @@ const SignIn = () => {
 
 	return (
 		<Container>
-			<Card title="Log In" width="w-[400px]">
+			<Card title="Sign Up" description="create your account" width="w-[400px]">
 				<form onSubmit={handleSubmit(onSubmit)}>
+					<Controller
+						name="name"
+						control={control}
+						render={({ field }) => (
+							<TextField
+								{...field}
+								variant="filled"
+								disabled={isLoading}
+								placeholder="Name"
+							/>
+						)}
+					/>
+					{errors.name && (
+						<p className="text-red-500 text-sm mb-1">{errors.name.message}</p>
+					)}
 					<Controller
 						name="email"
 						control={control}
@@ -113,7 +131,7 @@ const SignIn = () => {
 							onClick={handleSubmit(onSubmit)}
 							disabled={isLoading}
 						>
-							LOG IN
+							{isLoading ? "creating user" : "SIGN UP"}
 						</Button>
 					</Box>
 				</form>
@@ -123,4 +141,4 @@ const SignIn = () => {
 	);
 };
 
-export default SignIn;
+export default SignUp;

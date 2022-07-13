@@ -1,8 +1,11 @@
 import axios from "axios";
-import { FetchAllUsers } from "../../services/user.services";
+import {
+	FetchAllUsers,
+	loginUser,
+	createUser,
+} from "../../services/user.services";
 import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
-import { createUser } from "../../services/user.services";
 
 // local imports
 import { FetchUsers, User } from "../interfaces/api-interfaces";
@@ -15,14 +18,21 @@ const api = axios.create({
 	},
 });
 
+// get all users
 export const useFetchAllUsers = (onSuccess: (res: FetchUsers) => void) => {
 	return useQuery("/users", FetchAllUsers, { onSuccess });
 };
 
+// create user
 export const useCreatUserQuery = (onSuccess: (res: CreateUser) => void) => {
 	return useMutation("/users", createUser, {
 		onSuccess,
 	});
+};
+
+// login User
+export const useLoginUser = (onSuccess: (res: CreateUser) => void) => {
+	return useMutation("/auth/signin", loginUser, { onSuccess });
 };
 
 export const useReadUserProfileQuery = (params: { id: string }) => {

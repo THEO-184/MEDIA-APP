@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { IoMdContact } from "react-icons/io";
 import { BsArrowRight } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { AxiosError } from "axios";
 
 // ==== LOCAL IMPORTS ===;
 import Card from "../components/Card";
@@ -17,17 +18,13 @@ import { toast } from "react-toastify";
 const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
 
-	useEffect(() => {
-		toast("sdksdsdj");
-	});
-
 	const onSuccess = (res: FetchUsers) => {
 		setUsers(res.users);
 	};
 	const { isLoading, data, error } = useFetchAllUsers(onSuccess);
 
-	if (error instanceof Error) {
-		return <div>An error occured: ${error.message}</div>;
+	if (error instanceof AxiosError) {
+		return <div>An error occured: ${error.response?.data?.msg}</div>;
 	}
 
 	return (
