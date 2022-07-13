@@ -15,10 +15,10 @@ const Navbar = () => {
 					<Link to={"/users"}>
 						<li className="text-base">USERS</li>
 					</Link>
-					<Link to={"/signin"}>
+					<Link to={"/signup"}>
 						<li className="text-base">SIGN UP</li>
 					</Link>
-					<Link to={"/signout"}>
+					<Link to={"/signin"}>
 						<li className="text-base">SIGN IN</li>
 					</Link>
 				</ul>

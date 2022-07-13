@@ -13,6 +13,8 @@ export interface CreateUserProps extends Omit<User, "_id"> {
 	password: string;
 }
 
-export interface CreateUser extends User {
-	createdAt: string;
+export type CreatedUser = User & { createdAt: string };
+export interface CreateUser {
+	status: boolean;
+	user: CreatedUser;
 }

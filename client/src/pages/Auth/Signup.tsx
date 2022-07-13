@@ -30,7 +30,7 @@ type FormData = z.infer<typeof FormSchema>;
 
 type ServerEr = { msg: string };
 
-const SignIn = () => {
+const SignUp = () => {
 	const [userData, setUserData] = useState<CreateUser>({} as CreateUser);
 	const {
 		handleSubmit,
@@ -75,8 +75,23 @@ const SignIn = () => {
 
 	return (
 		<Container>
-			<Card title="Log In" width="w-[400px]">
+			<Card title="Sign Up" description="create your account" width="w-[400px]">
 				<form onSubmit={handleSubmit(onSubmit)}>
+					<Controller
+						name="name"
+						control={control}
+						render={({ field }) => (
+							<TextField
+								{...field}
+								variant="filled"
+								disabled={isLoading}
+								placeholder="Name"
+							/>
+						)}
+					/>
+					{errors.name && (
+						<p className="text-red-500 text-sm mb-1">{errors.name.message}</p>
+					)}
 					<Controller
 						name="email"
 						control={control}
@@ -117,7 +132,7 @@ const SignIn = () => {
 							onClick={handleSubmit(onSubmit)}
 							disabled={isLoading}
 						>
-							LOG IN
+							{isLoading ? "creating user" : "SIGN UP"}
 						</Button>
 					</Box>
 				</form>
@@ -127,4 +142,4 @@ const SignIn = () => {
 	);
 };
 
-export default SignIn;
+export default SignUp;
