@@ -24,33 +24,26 @@ export const getAllUsers: RequestHandler = async (req, res) => {
 	res.status(StatusCodes.OK).json({ count: users.length, users });
 };
 
-export const getUserById = async (
-	req: Request,
-	res: Response,
-	next: NextFunction,
-	id: string
-) => {
-	const user = await User.findOne({ _id: id });
-
+export const getCurrentUser = async (req: Request, res: Response) => {
+	const { _id } = req.user;
+	const user = await User.findOne({ _id });
 	if (!user) {
-		throw new NotFound(`no user with id : ${id} was found`);
-	}
-	req.user = user;
-	next();
-};
-
-export const getCurrentUser: RequestHandler<{ id: string }> = async (
-	req,
-	res
-) => {
-	const user = await findUserService({ _id: req.params.id });
-	if (!user) {
-		throw new NotFound(`no user with id : ${req.params.id} was found`);
+		throw new NotFound("no user found");
 	}
 	checkPermission(req.user, user);
 	res
 		.status(StatusCodes.OK)
-		.json({ user: { email: user.email, name: user.name, id: user._id } });
+		.json({ user: { email: user.email, name: user.name, _id: user._id } });
+};
+
+export const getUserById: RequestHandler<{ id: string }> = async (req, res) => {
+	const user = await findUserService({ _id: req.params.id });
+	if (!user) {
+		throw new NotFound(`no user with id : ${req.params.id} was found`);
+	}
+	res
+		.status(StatusCodes.OK)
+		.json({ user: { email: user.email, name: user.name, _id: user._id } });
 };
 
 export const updateUser: RequestHandler<

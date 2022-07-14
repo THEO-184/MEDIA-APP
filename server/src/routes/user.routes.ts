@@ -3,8 +3,8 @@ import {
 	createUser,
 	deleteUser,
 	getAllUsers,
-	getCurrentUser,
 	getUserById,
+	getCurrentUser,
 	updateUser,
 } from "./../controllers/user.controller";
 import { authMiddleware } from "../middlewares/authMiddleware";
@@ -13,11 +13,12 @@ const router = Router();
 
 router.route("/").get(getAllUsers).post(createUser);
 
+router.route("/showMe").get(authMiddleware, getCurrentUser);
+
 router
 	.route("/:id")
-	.get(authMiddleware, getCurrentUser)
+	.get(authMiddleware, getUserById)
 	.put(authMiddleware, updateUser)
 	.delete(authMiddleware, deleteUser);
-router.param("id", getUserById);
 
 export default router;
