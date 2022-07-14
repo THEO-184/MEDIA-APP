@@ -1,6 +1,7 @@
 import { generatePath } from "react-router-dom";
 import api from "../common/queries/api-user";
 import {
+	CreatedUser,
 	CreateUser,
 	CreateUserProps,
 	FetchUsers,
@@ -27,5 +28,10 @@ export const loginUser = async (data: SignInProps): Promise<CreateUser> => {
 
 export const readUserProfile = async (id: any): Promise<User> => {
 	const res = await api.get(`/users/${id}`);
+	return res.data;
+};
+
+export const readMyProfile = async (): Promise<CreateUser> => {
+	const res = await api.get("/users/showMe");
 	return res.data;
 };

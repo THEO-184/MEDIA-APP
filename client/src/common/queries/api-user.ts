@@ -4,6 +4,7 @@ import {
 	loginUser,
 	createUser,
 	readUserProfile,
+	readMyProfile,
 } from "../../services/user.services";
 import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
@@ -39,6 +40,10 @@ export const useLoginUser = (onSuccess: (res: CreateUser) => void) => {
 
 export const useReadUserProfileQuery = (id: any) => {
 	return useQuery(["users", id], () => readUserProfile(id));
+};
+
+export const useReadMyProfile = () => {
+	return useQuery("profile", readMyProfile);
 };
 
 export const useUpdateUserQuery = (

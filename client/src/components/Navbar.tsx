@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { User } from "../common/interfaces/api-interfaces";
 import { useAuth } from "./AppContext";
+import Box from "./Box";
 import Typography from "./Typography";
 
 const Navbar = () => {
@@ -24,6 +25,9 @@ const Navbar = () => {
 						<li className="text-base">LOG IN</li>
 					</Link>
 				</ul>
+				<Link to={"/profile"}>
+					<Typography size="base">PROFILE</Typography>
+				</Link>
 			</div>
 		</nav>
 	);
