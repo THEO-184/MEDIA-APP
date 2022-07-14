@@ -18,3 +18,5 @@ export interface CreateUser {
 	status: boolean;
 	user: CreatedUser;
 }
+
+export type createUserFn = (res: CreateUser) => void;

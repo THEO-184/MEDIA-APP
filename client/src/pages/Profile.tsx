@@ -12,14 +12,10 @@ import { User } from "../common/interfaces/api-interfaces";
 const Profile = () => {
 	const { id } = useParams();
 	const [userId, setUser] = useState(id);
-	console.log(userId);
-
 	const { data } = useReadUserProfileQuery(userId);
-	console.log(data);
-
 	return (
 		<Container>
-			<Card title="Profile">
+			<Card title="Profile" width="w-3/5">
 				<Typography>Welcome, {id}</Typography>
 			</Card>
 		</Container>

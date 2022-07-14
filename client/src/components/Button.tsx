@@ -2,6 +2,7 @@ import React from "react";
 // button can be a link or buttom
 type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
 	variant?: "outlined" | "filled" | "standard";
+	width?: string;
 };
 
 type AnchorProps = React.ComponentPropsWithoutRef<"a"> & {
@@ -30,7 +31,7 @@ const Button: Overload = (props: ButtonProps | AnchorProps) => {
 					: props.variant === "filled"
 					? "bg-slate-800 border-2 border-slate-800 text-white focus:outline-none hover:bg-slate-100 hover:text-slate-800"
 					: ""
-			}  w-28 h-10 mb-3 rounded-md font-bold`}
+			}  ${props.width ? props.width : "w-28"} h-10 mb-3 rounded-md font-bold`}
 		/>
 	);
 };

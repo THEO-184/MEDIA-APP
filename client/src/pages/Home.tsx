@@ -9,7 +9,6 @@ import Container from "../components/Container";
 
 const Home = () => {
 	const user = useAuth();
-	console.log("user", user);
 	return (
 		<Container>
 			<Card title="Home Page" description="Welcome to the MERN Skeleton Page">

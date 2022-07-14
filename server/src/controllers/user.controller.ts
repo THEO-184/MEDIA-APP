@@ -31,9 +31,14 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 		throw new NotFound("no user found");
 	}
 	checkPermission(req.user, user);
-	res
-		.status(StatusCodes.OK)
-		.json({ user: { email: user.email, name: user.name, _id: user._id } });
+	res.status(StatusCodes.OK).json({
+		user: {
+			email: user.email,
+			name: user.name,
+			_id: user._id,
+			createdAt: user.createdAt,
+		},
+	});
 };
 
 export const getUserById: RequestHandler<{ id: string }> = async (req, res) => {
@@ -43,7 +48,14 @@ export const getUserById: RequestHandler<{ id: string }> = async (req, res) => {
 	}
 	res
 		.status(StatusCodes.OK)
-		.json({ user: { email: user.email, name: user.name, _id: user._id } });
+		.json({
+			user: {
+				email: user.email,
+				name: user.name,
+				_id: user._id,
+				createdAt: user.createdAt,
+			},
+		});
 };
 
 export const updateUser: RequestHandler<

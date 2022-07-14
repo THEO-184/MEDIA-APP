@@ -26,12 +26,12 @@ export const loginUser = async (data: SignInProps): Promise<CreateUser> => {
 	return res.data;
 };
 
-export const readUserProfile = async (id: any): Promise<User> => {
+export const readUserProfile = async (id: any): Promise<CreateUser> => {
 	const res = await api.get(`/users/${id}`);
 	return res.data;
 };
 
-export const readMyProfile = async (): Promise<CreateUser> => {
+export const readMyProfile = async (): Promise<CreatedUser> => {
 	const res = await api.get("/users/showMe");
 	return res.data;
 };

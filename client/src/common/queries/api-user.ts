@@ -10,7 +10,12 @@ import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
 
 // local imports
-import { FetchUsers, User } from "../interfaces/api-interfaces";
+import {
+	CreatedUser,
+	createUserFn,
+	FetchUsers,
+	User,
+} from "../interfaces/api-interfaces";
 import { CreateUser, CreateUserProps } from "./../interfaces/api-interfaces";
 
 const api = axios.create({
@@ -23,18 +28,18 @@ const api = axios.create({
 
 // get all users
 export const useFetchAllUsers = (onSuccess: (res: FetchUsers) => void) => {
-	return useQuery("fetch-users", FetchAllUsers, { onSuccess });
+	return useQuery("users", FetchAllUsers, { onSuccess });
 };
 
 // create user
-export const useCreatUserQuery = (onSuccess: (res: CreateUser) => void) => {
+export const useCreatUserQuery = (onSuccess: createUserFn) => {
 	return useMutation("create-user", createUser, {
 		onSuccess,
 	});
 };
 
 // login User
-export const useLoginUser = (onSuccess: (res: CreateUser) => void) => {
+export const useLoginUser = (onSuccess: createUserFn) => {
 	return useMutation("signin", loginUser, { onSuccess });
 };
 
@@ -42,8 +47,10 @@ export const useReadUserProfileQuery = (id: any) => {
 	return useQuery(["users", id], () => readUserProfile(id));
 };
 
-export const useReadMyProfile = () => {
-	return useQuery("profile", readMyProfile);
+export const useReadMyProfile = (onSuccess: createUserFn) => {
+	return useQuery("profile", readMyProfile, {
+		onSuccess,
+	});
 };
 
 export const useUpdateUserQuery = (
