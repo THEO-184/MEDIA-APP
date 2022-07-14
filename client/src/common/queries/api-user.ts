@@ -3,6 +3,7 @@ import {
 	FetchAllUsers,
 	loginUser,
 	createUser,
+	readUserProfile,
 } from "../../services/user.services";
 import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
@@ -13,6 +14,7 @@ import { CreateUser, CreateUserProps } from "./../interfaces/api-interfaces";
 
 const api = axios.create({
 	baseURL: "http://localhost:5000/api/v1",
+	withCredentials: true,
 	headers: {
 		"Content-type": "application/json",
 	},
@@ -20,31 +22,23 @@ const api = axios.create({
 
 // get all users
 export const useFetchAllUsers = (onSuccess: (res: FetchUsers) => void) => {
-	return useQuery("/users", FetchAllUsers, { onSuccess });
+	return useQuery("fetch-users", FetchAllUsers, { onSuccess });
 };
 
 // create user
 export const useCreatUserQuery = (onSuccess: (res: CreateUser) => void) => {
-	return useMutation("/users", createUser, {
+	return useMutation("create-user", createUser, {
 		onSuccess,
 	});
 };
 
 // login User
 export const useLoginUser = (onSuccess: (res: CreateUser) => void) => {
-	return useMutation("/auth/signin", loginUser, { onSuccess });
+	return useMutation("signin", loginUser, { onSuccess });
 };
 
-export const useReadUserProfileQuery = (params: { id: string }) => {
-	return useQuery(
-		["get user", params.id],
-		async () => {
-			return await api.get<User>(generatePath("/users/:id", { id: params.id }));
-		},
-		{
-			staleTime: Infinity,
-		}
-	);
+export const useReadUserProfileQuery = (id: any) => {
+	return useQuery(["users", id], () => readUserProfile(id));
 };
 
 export const useUpdateUserQuery = (

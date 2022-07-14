@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
-import { AxiosError } from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -14,6 +13,7 @@ import Container from "../../components/Container";
 import TextField from "../../components/TextField";
 import { CreateUser, User } from "../../common/interfaces/api-interfaces";
 import { useLoginUser } from "../../common/queries/api-user";
+import { setTimeout } from "timers/promises";
 
 const FormSchema = z.object({
 	email: z.string().email(),
@@ -25,10 +25,9 @@ const FormSchema = z.object({
 
 type FormData = z.infer<typeof FormSchema>;
 
-type ServerEr = { msg: string };
-
 const SignIn = () => {
 	const [userData, setUserData] = useState<CreateUser>({} as CreateUser);
+
 	const {
 		handleSubmit,
 		control,
@@ -46,7 +45,8 @@ const SignIn = () => {
 	};
 
 	// create user
-	const { data, isLoading, isError, mutate } = useLoginUser(onSuccess);
+	const { data, isLoading, isError, isSuccess, mutate } =
+		useLoginUser(onSuccess);
 
 	if (isError) {
 		toast.error("Error while logging in user", {
@@ -54,10 +54,9 @@ const SignIn = () => {
 		});
 	}
 
-	if (data) {
+	if (isSuccess) {
 		toast.success(`Hello ${data.user.name} , you are succesfully logged in`);
 		localStorage.setItem("user", JSON.stringify(data.user));
-		console.log(data.user);
 		return <Navigate to={"/"} />;
 	}
 

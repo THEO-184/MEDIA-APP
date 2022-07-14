@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { IoMdContact } from "react-icons/io";
 import { BsArrowRight } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { AxiosError } from "axios";
 
 // ==== LOCAL IMPORTS ===;
@@ -33,7 +33,7 @@ const Users = () => {
 				{isLoading ? (
 					<h1>Loading..</h1>
 				) : (
-					users.map((user) => {
+					data?.users.map((user) => {
 						return (
 							<Box key={user._id}>
 								<Link to={`/users/${user._id}`}>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useQueryClient } from "react-query";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
@@ -41,10 +42,13 @@ const SignUp = () => {
 	});
 
 	//
+	const queryClient = useQueryClient();
 
 	// callback after user is succesfully created
 	const onSuccess = (res: CreateUser) => {
 		setUserData(res);
+		// invalidate cache and refetch users
+		queryClient.invalidateQueries("fetch-users");
 	};
 
 	// create user

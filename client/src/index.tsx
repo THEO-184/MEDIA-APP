@@ -4,11 +4,14 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import App from "./App";
+import AppContextProvider from "./components/AppContext";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			retry: false,
+			refetchOnWindowFocus: false,
+			refetchOnReconnect: false,
 		},
 	},
 });
@@ -19,7 +22,9 @@ const root = ReactDOM.createRoot(
 root.render(
 	<React.StrictMode>
 		<QueryClientProvider client={queryClient}>
-			<App />
+			<AppContextProvider>
+				<App />
+			</AppContextProvider>
 		</QueryClientProvider>
 	</React.StrictMode>
 );

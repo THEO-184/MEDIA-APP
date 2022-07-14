@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { User } from "../common/interfaces/api-interfaces";
+import { useAuth } from "./AppContext";
 import Typography from "./Typography";
 
 const Navbar = () => {
-	const [user, setUser] = useState<User | null>(null);
-	console.log("navbar");
-
-	useEffect(() => {}, []);
-
 	return (
 		<nav className="bg-slate-800 text-white h-16">
 			<div className="w-11/12 flex items-center justify-between h-full  text-2xl m-auto relative">
@@ -28,7 +24,6 @@ const Navbar = () => {
 						<li className="text-base">LOG IN</li>
 					</Link>
 				</ul>
-				{user && <Typography>{user.name}</Typography>}
 			</div>
 		</nav>
 	);

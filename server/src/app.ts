@@ -20,12 +20,18 @@ import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
 //
 const CURRENT_WORKING_DIR = process.cwd();
+const corsOptions = {};
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.JWT_SECRET!));
 app.use(compression());
-app.use(cors());
+app.use(
+	cors({
+		credentials: true,
+		origin: "http://localhost:3000",
+	})
+);
 app.use(helmet());
 
 app.get("/", (req, res) => {
