@@ -8,7 +8,6 @@ import Navbar from "../components/Navbar";
 import Container from "../components/Container";
 
 const Home = () => {
-	const user = useAuth();
 	return (
 		<Container>
 			<Card title="Home Page" description="Welcome to the MERN Skeleton Page">

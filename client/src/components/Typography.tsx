@@ -34,7 +34,9 @@ const Typography = <T extends React.ElementType>({
 	return (
 		<Component
 			{...restProps}
-			className={`text-${size} text-${color} ${className}`}
+			className={`${size ? `text-${size}` : "text-xl"} ${
+				color ? `text-${color}` : "text-white"
+			} ${className}`}
 		>
 			{children}
 		</Component>

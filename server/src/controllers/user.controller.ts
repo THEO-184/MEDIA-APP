@@ -1,4 +1,4 @@
-import { UserDocument } from "./../types/userTypes";
+import { UserDocument, UserInput } from "./../types/userTypes";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestErr, NotFound } from "../errors";
@@ -46,35 +46,35 @@ export const getUserById: RequestHandler<{ id: string }> = async (req, res) => {
 	if (!user) {
 		throw new NotFound(`no user with id : ${req.params.id} was found`);
 	}
-	res
-		.status(StatusCodes.OK)
-		.json({
-			user: {
-				email: user.email,
-				name: user.name,
-				_id: user._id,
-				createdAt: user.createdAt,
-			},
-		});
+	res.status(StatusCodes.OK).json({
+		user: {
+			email: user.email,
+			name: user.name,
+			_id: user._id,
+			createdAt: user.createdAt,
+		},
+	});
 };
 
 export const updateUser: RequestHandler<
 	{ id: string },
 	any,
-	{ name: string }
+	UserInput
 > = async (req, res) => {
 	let user = await User.findOne({ _id: req.params.id });
+	const { email, name, password } = req.body;
 
-	if (!req.body.name) {
-		throw new BadRequestErr("provide details ti be updated");
+	if (!email || !password || !name) {
+		throw new BadRequestErr("provide details to be updated");
 	}
-
 	if (!user) {
 		throw new NotFound(`no user with id : ${req.params.id} was found`);
 	}
 	checkPermission(req.user, user);
 
 	user.name = req.body.name;
+	user.password = req.body.password;
+	user.email = req.body.email;
 	await user.save();
 
 	res

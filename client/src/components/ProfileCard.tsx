@@ -6,15 +6,16 @@ import { MdEdit, MdDelete } from "react-icons/md";
 import Box from "./Box";
 import Typography from "./Typography";
 import Button from "./Button";
-
-const ProfileCard = ({
-	user,
-	isLoading,
-}: {
+import { Link } from "react-router-dom";
+interface Props {
 	user: CreatedUser;
 	isLoading: boolean;
-}) => {
+	isLoggedInUser: Boolean;
+}
+
+const ProfileCard = ({ user, isLoading, isLoggedInUser }: Props) => {
 	const { createdAt, email, name } = user;
+	const date = new Date(createdAt).toDateString();
 
 	if (isLoading) {
 		return <Box>Loading...</Box>;
@@ -22,25 +23,29 @@ const ProfileCard = ({
 	return (
 		<Box>
 			<Box className="flex items-center justify-between w-full mb-3 w-">
-				<Box className="flex w-48 items-center justify-between">
+				<Box className="flex w-1/2 items-center justify-between">
 					<CgProfile size={"50"} />
 					<Box className="flex flex-col">
-						<Typography variant={"span"}>{name}</Typography>
-						<Typography variant={"span"}>{email}</Typography>
+						<h1>{name}</h1>
+						<h1>{email}</h1>
 					</Box>
 				</Box>
 
-				<Box className="flex">
-					<Button width="w-9">
-						<MdEdit size={"25"} className="hover:text-red-600" />
-					</Button>
-					<Button width="w-9">
-						<MdDelete size={"25"} className="text-red-600" />
-					</Button>
-				</Box>
+				{isLoggedInUser && (
+					<Box className="flex">
+						<Link to={`/users/${user._id}/edit`}>
+							<Button width="w-9">
+								<MdEdit size={"25"} className="hover:text-red-600" />
+							</Button>
+						</Link>
+						<Button width="w-9">
+							<MdDelete size={"25"} className="text-red-600" />
+						</Button>
+					</Box>
+				)}
 			</Box>
 			<hr />
-			<Typography>Joined: {createdAt}</Typography>
+			<h1>Joined: {date}</h1>
 		</Box>
 	);
 };

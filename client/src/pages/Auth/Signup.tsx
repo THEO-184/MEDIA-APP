@@ -48,7 +48,7 @@ const SignUp = () => {
 	const onSuccess = (res: CreateUser) => {
 		setUserData(res);
 		// invalidate cache and refetch users
-		queryClient.invalidateQueries("users");
+		queryClient.invalidateQueries("/users");
 	};
 
 	// create user

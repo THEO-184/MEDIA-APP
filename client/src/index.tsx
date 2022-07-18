@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import App from "./App";
@@ -24,6 +26,7 @@ root.render(
 		<QueryClientProvider client={queryClient}>
 			<AppContextProvider>
 				<App />
+				<ReactQueryDevtools initialIsOpen={true} />
 			</AppContextProvider>
 		</QueryClientProvider>
 	</React.StrictMode>

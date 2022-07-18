@@ -1,22 +1,28 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useQueryClient } from "react-query";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // ====  LOCAL IMPORTS ====
-import Box from "../../components/Box";
-import Button from "../../components/Button";
-import Card from "../../components/Card";
-import Container from "../../components/Container";
-import TextField from "../../components/TextField";
-import { CreateUser, User } from "../../common/interfaces/api-interfaces";
-import { useLoginUser } from "../../common/queries/api-user";
-import { setTimeout } from "timers/promises";
+import Box from "../components/Box";
+import Button from "../components/Button";
+import Card from "../components/Card";
+import Container from "../components/Container";
+import TextField from "../components/TextField";
+import { CreatedUser, CreateUser } from "../common/interfaces/api-interfaces";
+import {
+	useCreatUserQuery,
+	useReadUserProfileQuery,
+} from "../common/queries/api-user";
 
 const FormSchema = z.object({
+	name: z
+		.string()
+		.min(3, "name must be atleast 3 characters")
+		.max(30, "name must be atmost 30 characters"),
 	email: z.string().email(),
 	password: z
 		.string()
@@ -26,8 +32,17 @@ const FormSchema = z.object({
 
 type FormData = z.infer<typeof FormSchema>;
 
-const SignIn = () => {
-	const [userData, setUserData] = useState<CreateUser>({} as CreateUser);
+type ServerEr = { msg: string };
+
+const EditProfile = () => {
+	// callback after user is succesfully created
+	const { id } = useParams();
+
+	const [userData, setUserData] = useState<CreatedUser>({} as CreatedUser);
+	const onSuccess = (res: CreateUser) => {
+		setUserData(res.user);
+	};
+	const { data, isLoading, isError } = useReadUserProfileQuery(id, onSuccess);
 
 	const {
 		handleSubmit,
@@ -36,37 +51,29 @@ const SignIn = () => {
 		formState: { errors },
 	} = useForm<FormData>({
 		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			email: data?.user.email || "",
+			name: data?.user.name || "",
+			password: "",
+		},
 	});
 
 	//
 	const queryClient = useQueryClient();
 
-	// callback after user is succesfully created
-	const onSuccess = (res: CreateUser) => {
-		setUserData(res);
-		queryClient.invalidateQueries("/users");
-	};
-
-	// create user
-	const { data, isLoading, isError, isSuccess, mutate } =
-		useLoginUser(onSuccess);
-
-	if (isError) {
-		toast.error("Error while logging in user", {
-			delay: 1000 * 10,
-		});
+	if (isLoading) {
+		return <h1>isLoading</h1>;
 	}
 
-	if (isSuccess) {
-		toast.success(`Hello ${data.user.name} , you are succesfully logged in`);
-		localStorage.setItem("user", JSON.stringify(data.user));
-		return <Navigate to={"/"} />;
+	if (isError) {
+		return <h1>iserror</h1>;
 	}
 
 	// send data to backend
 	const onSubmit: SubmitHandler<FormData> = (data) => {
-		mutate(data);
+		// mutate(data);
 		reset({
+			name: "",
 			email: "",
 			password: "",
 		});
@@ -74,8 +81,23 @@ const SignIn = () => {
 
 	return (
 		<Container>
-			<Card title="Log In" width="w-[400px]">
+			<Card title="Sign Up" description="create your account" width="w-[400px]">
 				<form onSubmit={handleSubmit(onSubmit)}>
+					<Controller
+						name="name"
+						control={control}
+						render={({ field }) => (
+							<TextField
+								{...field}
+								variant="filled"
+								disabled={isLoading}
+								placeholder="Name"
+							/>
+						)}
+					/>
+					{errors.name && (
+						<p className="text-red-500 text-sm mb-1">{errors.name.message}</p>
+					)}
 					<Controller
 						name="email"
 						control={control}
@@ -116,7 +138,7 @@ const SignIn = () => {
 							onClick={handleSubmit(onSubmit)}
 							disabled={isLoading}
 						>
-							LOG IN
+							{isLoading ? "creating user" : "SIGN UP"}
 						</Button>
 					</Box>
 				</form>
@@ -126,4 +148,4 @@ const SignIn = () => {
 	);
 };
 
-export default SignIn;
+export default EditProfile;
