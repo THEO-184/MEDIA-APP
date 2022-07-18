@@ -11,12 +11,7 @@ import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
 
 // local imports
-import {
-	CreatedUser,
-	createUserFn,
-	FetchUsers,
-	User,
-} from "../interfaces/api-interfaces";
+import { createUserFn, FetchUsers } from "../interfaces/api-interfaces";
 import { CreateUser, CreateUserProps } from "./../interfaces/api-interfaces";
 
 const api = axios.create({

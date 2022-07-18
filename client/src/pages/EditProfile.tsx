@@ -4,6 +4,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // ====  LOCAL IMPORTS ====
@@ -17,29 +18,10 @@ import {
 	CreateUser,
 	CreateUserProps,
 } from "../common/interfaces/api-interfaces";
-import api, {
-	useCreatUserQuery,
-	useReadUserProfileQuery,
-} from "../common/queries/api-user";
-import { updateProfile } from "../services/user.services";
-import axios from "axios";
-import { BsXLg } from "react-icons/bs";
-
-const FormSchema = z.object({
-	name: z
-		.string()
-		.min(3, "name must be atleast 3 characters")
-		.max(30, "name must be atmost 30 characters"),
-	email: z.string().email(),
-	password: z
-		.string()
-		.min(6, "password must be atleast 6 characters")
-		.max(20, "name must be atmost 20 characters"),
-});
+import { FormSchema } from "../utils/formSchema";
+import api, { useReadUserProfileQuery } from "../common/queries/api-user";
 
 type FormData = z.infer<typeof FormSchema>;
-
-type ServerEr = { msg: string };
 
 const EditProfile = () => {
 	// callback after user is succesfully created
@@ -68,11 +50,7 @@ const EditProfile = () => {
 	//
 	const queryClient = useQueryClient();
 
-	const {
-		data: message,
-		mutate,
-		isSuccess,
-	} = useMutation(
+	const { data: message, mutate } = useMutation(
 		async (userData: CreateUserProps): Promise<{ msg: string }> => {
 			return await api.put(`/users/${id}`, userData);
 		},

@@ -4,7 +4,6 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 // ====  LOCAL IMPORTS ====
 import Box from "../../components/Box";
 import Button from "../../components/Button";
@@ -13,22 +12,9 @@ import Container from "../../components/Container";
 import TextField from "../../components/TextField";
 import { CreateUser } from "../../common/interfaces/api-interfaces";
 import { useCreatUserQuery } from "../../common/queries/api-user";
-
-const FormSchema = z.object({
-	name: z
-		.string()
-		.min(3, "name must be atleast 3 characters")
-		.max(30, "name must be atmost 30 characters"),
-	email: z.string().email(),
-	password: z
-		.string()
-		.min(6, "password must be atleast 6 characters")
-		.max(20, "name must be atmost 20 characters"),
-});
+import { FormSchema } from "../../utils/formSchema";
 
 type FormData = z.infer<typeof FormSchema>;
-
-type ServerEr = { msg: string };
 
 const SignUp = () => {
 	const [userData, setUserData] = useState<CreateUser>({} as CreateUser);
