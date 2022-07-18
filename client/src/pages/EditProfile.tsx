@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -12,11 +12,18 @@ import Button from "../components/Button";
 import Card from "../components/Card";
 import Container from "../components/Container";
 import TextField from "../components/TextField";
-import { CreatedUser, CreateUser } from "../common/interfaces/api-interfaces";
 import {
+	CreatedUser,
+	CreateUser,
+	CreateUserProps,
+} from "../common/interfaces/api-interfaces";
+import api, {
 	useCreatUserQuery,
 	useReadUserProfileQuery,
 } from "../common/queries/api-user";
+import { updateProfile } from "../services/user.services";
+import axios from "axios";
+import { BsXLg } from "react-icons/bs";
 
 const FormSchema = z.object({
 	name: z
@@ -37,12 +44,12 @@ type ServerEr = { msg: string };
 const EditProfile = () => {
 	// callback after user is succesfully created
 	const { id } = useParams();
-
-	const [userData, setUserData] = useState<CreatedUser>({} as CreatedUser);
+	const [userDetails, setUserData] = useState<CreatedUser>({} as CreatedUser);
 	const onSuccess = (res: CreateUser) => {
 		setUserData(res.user);
 	};
 	const { data, isLoading, isError } = useReadUserProfileQuery(id, onSuccess);
+	console.log(data);
 
 	const {
 		handleSubmit,
@@ -61,6 +68,21 @@ const EditProfile = () => {
 	//
 	const queryClient = useQueryClient();
 
+	const {
+		data: message,
+		mutate,
+		isSuccess,
+	} = useMutation(
+		async (userData: CreateUserProps): Promise<{ msg: string }> => {
+			return await api.put(`/users/${id}`, userData);
+		},
+		{
+			onSuccess() {
+				queryClient.invalidateQueries("users");
+			},
+		}
+	);
+
 	if (isLoading) {
 		return <h1>isLoading</h1>;
 	}
@@ -69,9 +91,13 @@ const EditProfile = () => {
 		return <h1>iserror</h1>;
 	}
 
+	if (message) {
+		toast.success(`user with id: ${id} succesfully updated`);
+	}
+
 	// send data to backend
 	const onSubmit: SubmitHandler<FormData> = (data) => {
-		// mutate(data);
+		mutate(data);
 		reset({
 			name: "",
 			email: "",
@@ -81,7 +107,11 @@ const EditProfile = () => {
 
 	return (
 		<Container>
-			<Card title="Sign Up" description="create your account" width="w-[400px]">
+			<Card
+				title="Edit Profile"
+				description="create your account"
+				width="w-[400px]"
+			>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Controller
 						name="name"

@@ -35,3 +35,11 @@ export const readMyProfile = async (): Promise<CreatedUser> => {
 	const res = await api.get("/users/showMe");
 	return res.data;
 };
+
+export const updateProfile = async (
+	id: any,
+	data: CreateUserProps
+): Promise<{ msg: string }> => {
+	const res = await api.put(`/users/${id}`, data);
+	return res.data;
+};

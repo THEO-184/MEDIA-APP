@@ -5,6 +5,7 @@ import {
 	createUser,
 	readUserProfile,
 	readMyProfile,
+	updateProfile,
 } from "../../services/user.services";
 import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
@@ -28,7 +29,7 @@ const api = axios.create({
 
 // get all users
 export const useFetchAllUsers = (onSuccess: (res: FetchUsers) => void) => {
-	return useQuery("/users", FetchAllUsers, {
+	return useQuery("users", FetchAllUsers, {
 		onSuccess,
 		staleTime: 60 * 1000 * 20,
 	});
@@ -53,17 +54,8 @@ export const useReadUserProfileQuery = (id: any, onSuccess: createUserFn) => {
 };
 
 export const useReadMyProfile = (onSuccess: createUserFn) => {
-	return useQuery("showMe", readMyProfile, {
+	return useQuery("user", readMyProfile, {
 		onSuccess,
-	});
-};
-
-export const useUpdateUserQuery = (id: any, data: { name: string }) => {
-	return useMutation(async () => {
-		return await api.put<{ msg: string }>(
-			generatePath("/users/:id", { id }),
-			data
-		);
 	});
 };
 

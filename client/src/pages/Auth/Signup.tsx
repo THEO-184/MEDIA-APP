@@ -140,7 +140,6 @@ const SignUp = () => {
 					</Box>
 				</form>
 			</Card>
-			<ToastContainer />
 		</Container>
 	);
 };
