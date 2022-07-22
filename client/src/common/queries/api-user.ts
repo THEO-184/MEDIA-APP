@@ -6,13 +6,13 @@ import {
 	readUserProfile,
 	readMyProfile,
 	updateProfile,
+	deleteUser,
 } from "../../services/user.services";
 import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
 
 // local imports
 import { createUserFn, FetchUsers } from "../interfaces/api-interfaces";
-import { CreateUser, CreateUserProps } from "./../interfaces/api-interfaces";
 
 const api = axios.create({
 	baseURL: "http://localhost:5000/api/v1",
@@ -54,12 +54,8 @@ export const useReadMyProfile = (onSuccess: createUserFn) => {
 	});
 };
 
-export const useDeleteUserQuery = (params: { id: string }) => {
-	return useMutation("delete user", async () => {
-		return await api.delete<{ msg: string }>(
-			generatePath("/users/:id", { id: params.id })
-		);
-	});
+export const useDeleteUserQuery = (id: string, onSuccess?: () => void) => {
+	return useMutation(() => deleteUser(id), { onSuccess });
 };
 
 export default api;

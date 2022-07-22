@@ -92,5 +92,5 @@ export const deleteUser: RequestHandler<{ id: string }> = async (req, res) => {
 
 	await user.remove();
 
-	res.status(StatusCodes.OK).send({ msg: "update sucessfull" });
+	res.status(StatusCodes.OK).send({ msg: "delete sucessfull" });
 };

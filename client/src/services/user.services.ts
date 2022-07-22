@@ -43,3 +43,8 @@ export const updateProfile = async (
 	const res = await api.put(`/users/${id}`, data);
 	return res.data;
 };
+
+export const deleteUser = async (id: string): Promise<{ msg: string }> => {
+	const res = await api.delete(`/users/${id}`);
+	return res.data;
+};

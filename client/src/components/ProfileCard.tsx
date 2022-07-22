@@ -7,14 +7,22 @@ import Box from "./Box";
 import Typography from "./Typography";
 import Button from "./Button";
 import { Link } from "react-router-dom";
+
+type DeleteFn = (id: string) => void;
 interface Props {
 	user: CreatedUser;
 	isLoading: boolean;
 	isLoggedInUser: Boolean;
+	handleDelete?: DeleteFn;
 }
 
-const ProfileCard = ({ user, isLoading, isLoggedInUser }: Props) => {
-	const { createdAt, email, name } = user;
+const ProfileCard = ({
+	user,
+	isLoading,
+	isLoggedInUser,
+	handleDelete,
+}: Props) => {
+	const { createdAt, email, name, _id } = user;
 	const date = new Date(createdAt).toDateString();
 
 	if (isLoading) {
@@ -38,7 +46,7 @@ const ProfileCard = ({ user, isLoading, isLoggedInUser }: Props) => {
 								<MdEdit size={"25"} className="hover:text-red-600" />
 							</Button>
 						</Link>
-						<Button width="w-9">
+						<Button width="w-9" onClick={() => handleDelete!(_id)}>
 							<MdDelete size={"25"} className="text-red-600" />
 						</Button>
 					</Box>
