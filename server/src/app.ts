@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileUpload";
+import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
@@ -22,8 +24,10 @@ import authRoutes from "./routes/auth.routes";
 const CURRENT_WORKING_DIR = process.cwd();
 const corsOptions = {};
 
+app.use(morgan("tiny"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(fileUpload({ useTempFiles: true }));
 app.use(cookieParser(process.env.JWT_SECRET!));
 app.use(compression());
 app.use(

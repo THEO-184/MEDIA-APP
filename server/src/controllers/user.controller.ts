@@ -3,6 +3,7 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestErr, NotFound } from "../errors";
 import User from "../models/user.model";
+import formidable from "formidable";
 import { createUserService, findUserService } from "../services/user.services";
 import { checkPermission } from "../utils/permissions";
 
@@ -64,17 +65,25 @@ export const updateUser: RequestHandler<
 	let user = await User.findOne({ _id: req.params.id });
 	const { email, name, password } = req.body;
 
+	console.log(req.files);
+
 	if (!email || !password || !name) {
 		throw new BadRequestErr("provide details to be updated");
 	}
 	if (!user) {
 		throw new NotFound(`no user with id : ${req.params.id} was found`);
 	}
+	if (!req.files) {
+		throw new BadRequestErr("please add image");
+	}
+	const maxSize = 1024 * 1024; // extract data fom form
 	checkPermission(req.user, user);
 
 	user.name = req.body.name;
 	user.password = req.body.password;
 	user.email = req.body.email;
+	user.about = req.body.about;
+	user.photo = req.body.photo;
 	await user.save();
 
 	res
