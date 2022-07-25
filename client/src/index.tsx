@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import "react-toastify/dist/ReactToastify.css";
+import "reactjs-popup/dist/index.css";
 import "./index.css";
 import App from "./App";
 import AppContextProvider from "./components/AppContext";
@@ -26,7 +27,7 @@ root.render(
 		<QueryClientProvider client={queryClient}>
 			<AppContextProvider>
 				<App />
-				<ReactQueryDevtools initialIsOpen={true} />
+				<ReactQueryDevtools initialIsOpen={false} />
 			</AppContextProvider>
 		</QueryClientProvider>
 	</React.StrictMode>

@@ -45,6 +45,10 @@ const SignIn = () => {
 	const onSuccess = (res: CreateUser) => {
 		setUserData(res);
 		queryClient.invalidateQueries("/users");
+		localStorage.setItem("user", JSON.stringify(res.user));
+		window.setTimeout(() => {
+			window.location.assign("/");
+		}, 3000);
 	};
 
 	// create user
@@ -59,8 +63,6 @@ const SignIn = () => {
 
 	if (isSuccess) {
 		toast.success(`Hello ${data.user.name} , you are succesfully logged in`);
-		localStorage.setItem("user", JSON.stringify(data.user));
-		return <Navigate to={"/"} />;
 	}
 
 	// send data to backend

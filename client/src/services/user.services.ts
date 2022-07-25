@@ -48,3 +48,8 @@ export const deleteUser = async (id: string): Promise<{ msg: string }> => {
 	const res = await api.delete(`/users/${id}`);
 	return res.data;
 };
+
+export const signOut = async (): Promise<{ msg: string }> => {
+	const res = await api.get("/auth/signout");
+	return res.data;
+};

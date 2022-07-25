@@ -2,6 +2,7 @@ import React from "react";
 import { CreatedUser, CreateUser } from "../common/interfaces/api-interfaces";
 import { CgProfile } from "react-icons/cg";
 import { MdEdit, MdDelete } from "react-icons/md";
+import Popup from "reactjs-popup";
 
 import Box from "./Box";
 import Typography from "./Typography";
@@ -40,16 +41,30 @@ const ProfileCard = ({
 				</Box>
 
 				{isLoggedInUser && (
-					<Box className="flex">
+					<div className="flex">
 						<Link to={`/users/${user._id}/edit`}>
 							<Button width="w-9">
 								<MdEdit size={"25"} className="hover:text-red-600" />
 							</Button>
 						</Link>
-						<Button width="w-9" onClick={() => handleDelete!(_id)}>
-							<MdDelete size={"25"} className="text-red-600" />
-						</Button>
-					</Box>
+						<Popup
+							modal
+							trigger={
+								//
+								<Button width="w-9">
+									<MdDelete size={"25"} className="text-red-600" />
+								</Button>
+							}
+							position="center center"
+						>
+							<div className="w-full text-center border border-solid p-1 h-24 flex items-center justify-center">
+								<Button variant="filled" onClick={() => handleDelete!(_id)}>
+									Yes
+								</Button>
+								<Button variant="outlined">No</Button>
+							</div>
+						</Popup>
+					</div>
 				)}
 			</Box>
 			<hr />

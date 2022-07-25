@@ -34,6 +34,5 @@ export const signOut: RequestHandler = async (req, res) => {
 		httpOnly: true,
 		expires: new Date(Date.now()),
 	});
-
 	res.status(StatusCodes.OK).json({ msg: "logout successful" });
 };

@@ -20,18 +20,15 @@ import {
 } from "../common/interfaces/api-interfaces";
 import { FormSchema } from "../utils/formSchema";
 import api, { useReadUserProfileQuery } from "../common/queries/api-user";
+import { useAuth } from "../components/AppContext";
 
 type FormData = z.infer<typeof FormSchema>;
 
 const EditProfile = () => {
 	// callback after user is succesfully created
 	const { id } = useParams();
+	const auth = useAuth();
 	const [userDetails, setUserData] = useState<CreatedUser>({} as CreatedUser);
-	const onSuccess = (res: CreateUser) => {
-		setUserData(res.user);
-	};
-	const { data, isLoading, isError } = useReadUserProfileQuery(id, onSuccess);
-	console.log(data);
 
 	const {
 		handleSubmit,
@@ -41,8 +38,8 @@ const EditProfile = () => {
 	} = useForm<FormData>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			email: data?.user.email || "",
-			name: data?.user.name || "",
+			email: auth ? auth.email : "",
+			name: auth ? auth.name : "",
 			password: "",
 		},
 	});
@@ -50,7 +47,11 @@ const EditProfile = () => {
 	//
 	const queryClient = useQueryClient();
 
-	const { data: message, mutate } = useMutation(
+	const {
+		data: message,
+		mutate,
+		isLoading,
+	} = useMutation(
 		async (userData: CreateUserProps): Promise<{ msg: string }> => {
 			return await api.put(`/users/${id}`, userData);
 		},
@@ -60,14 +61,6 @@ const EditProfile = () => {
 			},
 		}
 	);
-
-	if (isLoading) {
-		return <h1>isLoading</h1>;
-	}
-
-	if (isError) {
-		return <h1>iserror</h1>;
-	}
 
 	if (message) {
 		toast.success(`user with id: ${id} succesfully updated`);

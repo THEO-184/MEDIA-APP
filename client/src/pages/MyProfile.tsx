@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { CreatedUser, CreateUser } from "../common/interfaces/api-interfaces";
 import {
 	useDeleteUserQuery,
@@ -11,13 +13,9 @@ import ProfileCard from "../components/ProfileCard";
 const MyProfile = () => {
 	const [user, setUser] = useState<CreatedUser>({} as CreatedUser);
 	const [userId, setUserId] = useState("");
+	const [isToastCompleted, setIsToastCompleted] = useState(false);
 
-	const {
-		mutate,
-		data,
-		isError,
-		isLoading: isDeleting,
-	} = useDeleteUserQuery(userId);
+	const { mutate, data, isLoading: isDeleting } = useDeleteUserQuery(userId);
 
 	const handleDelete = () => {
 		mutate();
@@ -29,7 +27,15 @@ const MyProfile = () => {
 	};
 	const { isLoading } = useReadMyProfile(onSuccess);
 	if (data) {
-		console.log("delete message", data.msg);
+		toast.success(data.msg, {
+			onClose(props) {
+				setIsToastCompleted(true);
+			},
+		});
+	}
+
+	if (isToastCompleted) {
+		return <Navigate to={"/"} />;
 	}
 
 	return (

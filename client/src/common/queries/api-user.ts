@@ -7,6 +7,7 @@ import {
 	readMyProfile,
 	updateProfile,
 	deleteUser,
+	signOut,
 } from "../../services/user.services";
 import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
@@ -56,6 +57,10 @@ export const useReadMyProfile = (onSuccess: createUserFn) => {
 
 export const useDeleteUserQuery = (id: string, onSuccess?: () => void) => {
 	return useMutation(() => deleteUser(id), { onSuccess });
+};
+
+export const useSignOutQuery = () => {
+	return useQuery("signout", signOut, { enabled: false });
 };
 
 export default api;

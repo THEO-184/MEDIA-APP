@@ -1,7 +1,3 @@
-import React, { useEffect } from "react";
-import { useAuth } from "../components/AppContext";
-import { Outlet } from "react-router-dom";
-
 import UnicornImg from "../assets//images/unicornbike.jpg";
 import Card from "../components/Card";
 import Navbar from "../components/Navbar";
