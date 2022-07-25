@@ -14,7 +14,7 @@ export const signIn: RequestHandler<any, any, UserInput> = async (req, res) => {
 		throw new BadRequestErr("provide email and password");
 	}
 
-	const user = await User.findOne({ email });
+	const user = await User.findOne({ email }).select("name email");
 	if (!user) {
 		throw new Unauthenticated("user not authenticated");
 	}
@@ -24,9 +24,7 @@ export const signIn: RequestHandler<any, any, UserInput> = async (req, res) => {
 	}
 
 	attachCookies(res, { _id: user._id, name: user.name });
-	res
-		.status(StatusCodes.OK)
-		.json({ user: { _id: user._id, name: user.name, email: user.email } });
+	res.status(StatusCodes.OK).json({ user });
 };
 
 export const signOut: RequestHandler = async (req, res) => {

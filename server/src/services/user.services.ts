@@ -7,5 +7,5 @@ export const createUserService = (input: DocumentDefinition<UserDocument>) => {
 };
 
 export const findUserService = (filter: FilterQuery<UserDocument>) => {
-	return User.findOne(filter);
+	return User.findOne(filter).select("-password -__v");
 };

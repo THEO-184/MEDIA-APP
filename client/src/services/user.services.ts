@@ -3,7 +3,7 @@ import api from "../common/queries/api-user";
 import {
 	CreatedUser,
 	CreateUser,
-	CreateUserProps,
+	SignUp,
 	FetchUsers,
 	User,
 } from "../common/interfaces/api-interfaces";
@@ -14,9 +14,7 @@ export const FetchAllUsers = async (): Promise<FetchUsers> => {
 	return res?.data;
 };
 
-export const createUser = async (
-	data: CreateUserProps
-): Promise<CreateUser> => {
+export const createUser = async (data: SignUp): Promise<CreateUser> => {
 	const res = await api.post("/users", data);
 	return res?.data;
 };
@@ -38,7 +36,7 @@ export const readMyProfile = async (): Promise<CreatedUser> => {
 
 export const updateProfile = async (
 	id: any,
-	data: CreateUserProps
+	data: SignUp
 ): Promise<{ msg: string }> => {
 	const res = await api.put(`/users/${id}`, data);
 	return res.data;

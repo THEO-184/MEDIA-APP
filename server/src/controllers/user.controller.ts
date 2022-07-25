@@ -1,10 +1,13 @@
 import { UserDocument, UserInput } from "./../types/userTypes";
 import { NextFunction, Request, RequestHandler, Response } from "express";
+import fs from "fs";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestErr, NotFound } from "../errors";
 import User from "../models/user.model";
+import formidable from "formidable";
 import { createUserService, findUserService } from "../services/user.services";
 import { checkPermission } from "../utils/permissions";
+import { UploadedFile } from "express-fileupload";
 
 export const createUser: RequestHandler<any, any, UserDocument> = async (
 	req,
@@ -19,25 +22,20 @@ export const createUser: RequestHandler<any, any, UserDocument> = async (
 };
 
 export const getAllUsers: RequestHandler = async (req, res) => {
-	const users = await User.find().select("name email _id");
+	const users = await User.find().select("-password -__v");
 
 	res.status(StatusCodes.OK).json({ count: users.length, users });
 };
 
 export const getCurrentUser = async (req: Request, res: Response) => {
 	const { _id } = req.user;
-	const user = await User.findOne({ _id });
+	const user = await User.findOne({ _id }).select("-password -__v");
 	if (!user) {
 		throw new NotFound("no user found");
 	}
 	checkPermission(req.user, user);
 	res.status(StatusCodes.OK).json({
-		user: {
-			email: user.email,
-			name: user.name,
-			_id: user._id,
-			createdAt: user.createdAt,
-		},
+		user,
 	});
 };
 
@@ -47,12 +45,7 @@ export const getUserById: RequestHandler<{ id: string }> = async (req, res) => {
 		throw new NotFound(`no user with id : ${req.params.id} was found`);
 	}
 	res.status(StatusCodes.OK).json({
-		user: {
-			email: user.email,
-			name: user.name,
-			_id: user._id,
-			createdAt: user.createdAt,
-		},
+		user,
 	});
 };
 
@@ -64,17 +57,36 @@ export const updateUser: RequestHandler<
 	let user = await User.findOne({ _id: req.params.id });
 	const { email, name, password } = req.body;
 
+	console.log(req.body, req.files);
+
 	if (!email || !password || !name) {
 		throw new BadRequestErr("provide details to be updated");
 	}
 	if (!user) {
 		throw new NotFound(`no user with id : ${req.params.id} was found`);
 	}
+	if (!req.files) {
+		throw new BadRequestErr("please add image");
+	}
+	const userProfile = req.files.image as UploadedFile;
+	// check file type
+	if (!userProfile.mimetype.startsWith("image")) {
+		throw new BadRequestErr("file type should be image");
+	}
+	// check file size
+	const maxSize = 1024 * 1024; // extract data fom form
+	// if (maxSize > userProfile.size) {
+	// 	throw new BadRequestErr("image size should be atmost 1kb");
+	// }
+
 	checkPermission(req.user, user);
 
 	user.name = req.body.name;
 	user.password = req.body.password;
 	user.email = req.body.email;
+	user.about = req.body.about;
+	user.photo.data = fs.readFileSync(userProfile.tempFilePath);
+	user.photo.contentType = userProfile.mimetype;
 	await user.save();
 
 	res

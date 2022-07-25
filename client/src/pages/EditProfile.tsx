@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ProfileImg from "../assets/images/profile-icon-png-899.png";
 import { useMutation, useQueryClient } from "react-query";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -16,17 +17,18 @@ import TextField from "../components/TextField";
 import {
 	CreatedUser,
 	CreateUser,
-	CreateUserProps,
+	SignUp,
 } from "../common/interfaces/api-interfaces";
 import { FormSchema } from "../utils/formSchema";
 import api, { useReadUserProfileQuery } from "../common/queries/api-user";
 import { useAuth } from "../components/AppContext";
 
-type FormData = z.infer<typeof FormSchema>;
+type FormDataType = z.infer<typeof FormSchema>;
 
 const EditProfile = () => {
 	// callback after user is succesfully created
 	const { id } = useParams();
+	const [photoDetails, setPhotoDetails] = useState<File>({} as File);
 	const auth = useAuth();
 	const [userDetails, setUserData] = useState<CreatedUser>({} as CreatedUser);
 
@@ -35,7 +37,7 @@ const EditProfile = () => {
 		control,
 		reset,
 		formState: { errors },
-	} = useForm<FormData>({
+	} = useForm<FormDataType>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
 			email: auth ? auth.email : "",
@@ -50,10 +52,15 @@ const EditProfile = () => {
 	const {
 		data: message,
 		mutate,
+		isError,
 		isLoading,
 	} = useMutation(
-		async (userData: CreateUserProps): Promise<{ msg: string }> => {
-			return await api.put(`/users/${id}`, userData);
+		async (userData: FormData): Promise<{ msg: string }> => {
+			return await api.put(`/users/${id}`, userData, {
+				headers: {
+					Accept: "applications/json",
+				},
+			});
 		},
 		{
 			onSuccess() {
@@ -66,9 +73,22 @@ const EditProfile = () => {
 		toast.success(`user with id: ${id} succesfully updated`);
 	}
 
+	// select photo
+	const handleChangePhoto: React.FormEventHandler<HTMLInputElement> = (e) => {
+		e.preventDefault();
+		const target = e.target as HTMLInputElement;
+		const fileData = target.files![0];
+		setPhotoDetails(fileData);
+	};
+
 	// send data to backend
-	const onSubmit: SubmitHandler<FormData> = (data) => {
-		mutate(data);
+	const onSubmit: SubmitHandler<FormDataType> = (data) => {
+		let userData = new FormData();
+		data.name && userData.append("name", data.name);
+		data.email && userData.append("email", data.email);
+		data.password && userData.append("password", data.password);
+		photoDetails.name && userData.append("image", photoDetails);
+		mutate(userData);
 		reset({
 			name: "",
 			email: "",
@@ -83,6 +103,28 @@ const EditProfile = () => {
 				description="create your account"
 				width="w-[400px]"
 			>
+				<div className="text-center flex justify-center my-3">
+					<img
+						src={ProfileImg}
+						alt="profile-img"
+						className="w-16 h-16 rounded-full"
+					/>
+				</div>
+				<form className="text-center flex justify-center my-2">
+					<label htmlFor="upload">
+						<span className="block border-2 border-solid border-slate-800 focus:outline-none text-slate-800 hover:bg-slate-800 hover:text-white w-28 rounded-md cursor-pointer m-2">
+							Upload
+						</span>
+						<span>{photoDetails.name}</span>
+					</label>
+					<input
+						type={"file"}
+						accept="image/*"
+						id="upload"
+						className="hidden"
+						onChange={handleChangePhoto}
+					/>
+				</form>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Controller
 						name="name"

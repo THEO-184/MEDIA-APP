@@ -25,6 +25,14 @@ const UserSchema = new Schema(
 			required: true,
 			minlength: [6, "password must be atleast 6 characters"],
 		},
+		about: {
+			type: String,
+			trim: true,
+		},
+		photo: {
+			data: Buffer,
+			contentType: String,
+		},
 	},
 	{ timestamps: true }
 );
