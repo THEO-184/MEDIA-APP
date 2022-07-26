@@ -1,6 +1,6 @@
 const cloudinary: Cloudinary = require("cloudinary").v2;
 import { Cloudinary, UserDocument, UserInput } from "./../types/userTypes";
-import { Request, RequestHandler, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestErr, NotFound } from "../errors";
 import User from "../models/user.model";
@@ -113,4 +113,66 @@ export const deleteUser: RequestHandler<{ id: string }> = async (req, res) => {
 	await user.remove();
 
 	res.status(StatusCodes.OK).send({ msg: "delete sucessfull" });
+};
+
+export const addFollowing = async (
+	req: Request<any, any, { id: string }>,
+	res: Response,
+	next: NextFunction
+) => {
+	await User.findOneAndUpdate(
+		{ _id: req.user._id },
+		{ $push: { following: req.body.id } }
+	);
+	next();
+};
+
+export const addFollower = async (
+	req: Request<any, any, { id: string }>,
+	res: Response
+) => {
+	const user = await User.findOneAndUpdate(
+		{ _id: req.body.id },
+		{ $push: { followers: req.user._id } },
+		{ new: true, runValidators: true }
+	)
+		.select("-password -__v")
+		.populate("followers", "_id name")
+		.populate("following", "_id name");
+	if (!user) {
+		throw new NotFound(`no user forund with id: ${req.body.id}`);
+	}
+
+	res.status(StatusCodes.OK).json({ user });
+};
+
+export const removeFollowing = async (
+	req: Request<any, any, { id: any }>,
+	res: Response,
+	next: NextFunction
+) => {
+	await User.findOneAndUpdate(
+		{ _id: req.user._id },
+		{ $pull: { following: req.body.id } }
+	);
+	next();
+};
+
+export const removeFollower = async (
+	req: Request<any, any, { id: string }>,
+	res: Response
+) => {
+	const user = await User.findOneAndUpdate(
+		{ _id: req.body.id },
+		{ $pull: { followers: req.user._id } },
+		{ new: true, runValidators: true }
+	)
+		.select("-password -__v")
+		.populate("followers", "_id name")
+		.populate("following", "_id name");
+	if (!user) {
+		throw new NotFound(`no user forund with id: ${req.body.id}`);
+	}
+
+	res.status(StatusCodes.OK).json({ user });
 };

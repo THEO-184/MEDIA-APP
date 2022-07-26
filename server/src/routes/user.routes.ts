@@ -6,6 +6,10 @@ import {
 	getUserById,
 	getCurrentUser,
 	updateUser,
+	addFollower,
+	addFollowing,
+	removeFollowing,
+	removeFollower,
 } from "./../controllers/user.controller";
 import { authMiddleware } from "../middlewares/authMiddleware";
 
@@ -21,4 +25,6 @@ router
 	.put(authMiddleware, updateUser)
 	.delete(authMiddleware, deleteUser);
 
+router.route("/follow").put(authMiddleware, addFollowing, addFollower);
+router.route("/unfollow").put(authMiddleware, removeFollower, removeFollower);
 export default router;
