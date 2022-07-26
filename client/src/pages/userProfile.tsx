@@ -13,6 +13,7 @@ import {
 	User,
 } from "../common/interfaces/api-interfaces";
 import ProfileCard from "../components/ProfileCard";
+import Button from "../components/Button";
 
 const UserProfile = () => {
 	const { id } = useParams();

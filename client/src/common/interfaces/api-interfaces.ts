@@ -5,6 +5,8 @@ export interface User {
 	createdAt: string;
 	updatedAt: string;
 	photo: string;
+	following: { _id: string; name: string }[];
+	followers: { _id: string; name: string }[];
 }
 
 export interface FetchUsers {

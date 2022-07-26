@@ -9,6 +9,7 @@ import Box from "./Box";
 import Typography from "./Typography";
 import Button from "./Button";
 import { Link } from "react-router-dom";
+import { useAuth } from "./AppContext";
 
 type DeleteFn = (id: string) => void;
 interface Props {
@@ -26,26 +27,32 @@ const ProfileCard = ({
 }: Props) => {
 	const { createdAt, email, name, _id, photo } = user;
 	const date = new Date(createdAt).toDateString();
+	const auth = useAuth();
 
 	if (isLoading) {
 		return <Box>Loading...</Box>;
 	}
+
+	const isFollowUser = user.followers.some(
+		(follower) => follower._id === auth?._id
+	);
+
 	return (
 		<Box>
 			<Box className="flex items-center justify-between w-full mb-3 w-">
-				<Box className="flex w-1/2 items-center justify-between">
+				<Box className="flex items-center justify-between ">
 					<img
 						src={photo || DefaultImg}
 						alt="user"
 						className="w-14 h-14 rounded-full"
 					/>
-					<Box className="flex flex-col">
+					<Box className="flex flex-col ml-5">
 						<h1>{name}</h1>
 						<h1>{email}</h1>
 					</Box>
 				</Box>
 
-				{isLoggedInUser && (
+				{isLoggedInUser ? (
 					<div className="flex">
 						<Link to={`/users/${user._id}/edit`}>
 							<Button width="w-9">
@@ -70,10 +77,20 @@ const ProfileCard = ({
 							</div>
 						</Popup>
 					</div>
+				) : (
+					<Box className="w-">
+						{isFollowUser ? (
+							<Button color="green" variant="filled">
+								UnFollow
+							</Button>
+						) : (
+							<Button variant="filled">Follow</Button>
+						)}
+					</Box>
 				)}
 			</Box>
 			<hr />
-			<h1>Joined: {date}</h1>
+			<h1 className="mt-2">Joined: {date}</h1>
 		</Box>
 	);
 };

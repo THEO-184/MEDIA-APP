@@ -1,12 +1,15 @@
 import React from "react";
 // button can be a link or buttom
-type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
+type ButtonProps = Omit<React.ComponentPropsWithoutRef<"button">, "color"> & {
 	variant?: "outlined" | "filled" | "standard";
 	width?: string;
+	color?: string;
 };
 
-type AnchorProps = React.ComponentPropsWithoutRef<"a"> & {
+type AnchorProps = Omit<React.ComponentPropsWithoutRef<"a">, "color"> & {
 	variant?: "outlined" | "filled" | "standard";
+	width?: string;
+	color?: string;
 };
 
 // type predicate to check if it is  button or link
@@ -27,9 +30,17 @@ const Button: Overload = (props: ButtonProps | AnchorProps) => {
 			{...props}
 			className={`${
 				props.variant === "outlined"
-					? "border-2 border-solid border-slate-800 focus:outline-none text-slate-800 hover:bg-slate-800 hover:text-white"
+					? `border-2 border-solid ${
+							props.color
+								? `border-${props.color}-800 text-${props.color}-800 hover:bg-${props.color}-800`
+								: "border-slate-800 text-slate-800 hover:bg-slate-800"
+					  }  hover:text-white`
 					: props.variant === "filled"
-					? "bg-slate-800 border-2 border-slate-800 text-white focus:outline-none hover:bg-slate-100 hover:text-slate-800"
+					? `${
+							props.color
+								? `bg-yellow-800 border-${props.color}-800 hover:bg-${props.color}-100 hover:text-${props.color}-800`
+								: "bg-slate-800 border-2 border-slate-800  hover:bg-slate-100 hover:text-slate-800"
+					  }  text-white focus:outline-none`
 					: ""
 			}  ${props.width ? props.width : "w-28"} h-10 mb-3 rounded-md font-bold`}
 		/>
