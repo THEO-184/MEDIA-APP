@@ -17,6 +17,8 @@ export interface UserInput {
 	password: string;
 	about: string;
 	photo: string;
+	following: any[];
+	followers: any[];
 }
 
 export interface UserDocument extends UserInput, mongoose.Document {

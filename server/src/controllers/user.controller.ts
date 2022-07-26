@@ -1,11 +1,9 @@
 const cloudinary: Cloudinary = require("cloudinary").v2;
 import { Cloudinary, UserDocument, UserInput } from "./../types/userTypes";
-import { NextFunction, Request, RequestHandler, Response } from "express";
-import fs from "fs";
+import { Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestErr, NotFound } from "../errors";
 import User from "../models/user.model";
-import formidable from "formidable";
 import { createUserService, findUserService } from "../services/user.services";
 import { checkPermission } from "../utils/permissions";
 import { UploadedFile } from "express-fileupload";
@@ -30,7 +28,10 @@ export const getAllUsers: RequestHandler = async (req, res) => {
 
 export const getCurrentUser = async (req: Request, res: Response) => {
 	const { _id } = req.user;
-	const user = await User.findOne({ _id }).select("-password -__v");
+	const user = await User.findOne({ _id })
+		.select("-password -__v")
+		.populate("following", "_id name")
+		.populate("followers", "_id name");
 	if (!user) {
 		throw new NotFound("no user found");
 	}

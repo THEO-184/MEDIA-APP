@@ -7,5 +7,8 @@ export const createUserService = (input: DocumentDefinition<UserDocument>) => {
 };
 
 export const findUserService = (filter: FilterQuery<UserDocument>) => {
-	return User.findOne(filter).select("-password -__v");
+	return User.findOne(filter)
+		.select("-password -__v")
+		.populate("following", "name _id")
+		.populate("followers", "name _id");
 };
