@@ -1,4 +1,5 @@
-import { UserDocument, UserInput } from "./../types/userTypes";
+const cloudinary: Cloudinary = require("cloudinary").v2;
+import { Cloudinary, UserDocument, UserInput } from "./../types/userTypes";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import fs from "fs";
 import { StatusCodes } from "http-status-codes";
@@ -80,13 +81,19 @@ export const updateUser: RequestHandler<
 	// }
 
 	checkPermission(req.user, user);
+	const imgFile: any = await cloudinary.uploader.upload(
+		userProfile.tempFilePath,
+		{
+			use_filename: true,
+			folder: "MERN-SOCIAL/Profile-photos",
+		}
+	);
 
 	user.name = req.body.name;
 	user.password = req.body.password;
 	user.email = req.body.email;
 	user.about = req.body.about;
-	user.photo.data = fs.readFileSync(userProfile.tempFilePath);
-	user.photo.contentType = userProfile.mimetype;
+	user.photo = imgFile.secure_url;
 	await user.save();
 
 	res

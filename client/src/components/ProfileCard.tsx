@@ -1,6 +1,7 @@
 import React from "react";
-import { CreatedUser, CreateUser } from "../common/interfaces/api-interfaces";
-import { CgProfile } from "react-icons/cg";
+import { User } from "../common/interfaces/api-interfaces";
+import DefaultImg from "../assets/images/profile-icon-png-899.png";
+
 import { MdEdit, MdDelete } from "react-icons/md";
 import Popup from "reactjs-popup";
 
@@ -11,7 +12,7 @@ import { Link } from "react-router-dom";
 
 type DeleteFn = (id: string) => void;
 interface Props {
-	user: CreatedUser;
+	user: User;
 	isLoading: boolean;
 	isLoggedInUser: Boolean;
 	handleDelete?: DeleteFn;
@@ -23,7 +24,7 @@ const ProfileCard = ({
 	isLoggedInUser,
 	handleDelete,
 }: Props) => {
-	const { createdAt, email, name, _id } = user;
+	const { createdAt, email, name, _id, photo } = user;
 	const date = new Date(createdAt).toDateString();
 
 	if (isLoading) {
@@ -33,7 +34,11 @@ const ProfileCard = ({
 		<Box>
 			<Box className="flex items-center justify-between w-full mb-3 w-">
 				<Box className="flex w-1/2 items-center justify-between">
-					<CgProfile size={"50"} />
+					<img
+						src={photo || DefaultImg}
+						alt="user"
+						className="w-14 h-14 rounded-full"
+					/>
 					<Box className="flex flex-col">
 						<h1>{name}</h1>
 						<h1>{email}</h1>

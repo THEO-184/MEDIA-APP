@@ -16,7 +16,7 @@ import ProfileCard from "../components/ProfileCard";
 
 const UserProfile = () => {
 	const { id } = useParams();
-	const [person, setPerson] = useState<CreatedUser>({} as CreatedUser);
+	const [person, setPerson] = useState<User>({} as User);
 
 	const onSuccess = (res: CreateUser) => {
 		setPerson(res.user);

@@ -16,14 +16,24 @@ export interface UserInput {
 	email: string;
 	password: string;
 	about: string;
-	photo: {
-		data: any;
-		contentType: any;
-	};
+	photo: string;
 }
 
 export interface UserDocument extends UserInput, mongoose.Document {
 	createdAt: Date;
 	updatedAt: Date;
 	comparePassword(input: string): Promise<boolean>;
+}
+
+type Upload = (
+	path: string,
+	{
+		use_filename,
+		folder,
+	}: { use_filename: boolean; folder: "MERN-SOCIAL/Profile-photos" }
+) => Object;
+export interface Cloudinary {
+	uploader: {
+		upload: Upload;
+	};
 }

@@ -20,7 +20,10 @@ import {
 	SignUp,
 } from "../common/interfaces/api-interfaces";
 import { FormSchema } from "../utils/formSchema";
-import api, { useReadUserProfileQuery } from "../common/queries/api-user";
+import api, {
+	useReadMyProfile,
+	useReadUserProfileQuery,
+} from "../common/queries/api-user";
 import { useAuth } from "../components/AppContext";
 
 type FormDataType = z.infer<typeof FormSchema>;
@@ -31,6 +34,7 @@ const EditProfile = () => {
 	const [photoDetails, setPhotoDetails] = useState<File>({} as File);
 	const auth = useAuth();
 	const [userDetails, setUserData] = useState<CreatedUser>({} as CreatedUser);
+	const [profileUrl, setProfileUrl] = useState("");
 
 	const {
 		handleSubmit,
@@ -48,6 +52,11 @@ const EditProfile = () => {
 
 	//
 	const queryClient = useQueryClient();
+
+	const onSuccess = (res: CreateUser) => {
+		setProfileUrl(res.user.photo);
+	};
+	const { data } = useReadMyProfile(onSuccess);
 
 	const {
 		data: message,
@@ -94,6 +103,7 @@ const EditProfile = () => {
 			email: "",
 			password: "",
 		});
+		setPhotoDetails({} as File);
 	};
 
 	return (
@@ -105,7 +115,7 @@ const EditProfile = () => {
 			>
 				<div className="text-center flex justify-center my-3">
 					<img
-						src={ProfileImg}
+						src={profileUrl || ProfileImg}
 						alt="profile-img"
 						className="w-16 h-16 rounded-full"
 					/>
@@ -181,7 +191,7 @@ const EditProfile = () => {
 							onClick={handleSubmit(onSubmit)}
 							disabled={isLoading}
 						>
-							{isLoading ? "creating user" : "SIGN UP"}
+							EDIT USER
 						</Button>
 					</Box>
 				</form>

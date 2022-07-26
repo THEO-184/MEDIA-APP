@@ -28,10 +28,11 @@ const UserSchema = new Schema(
 		about: {
 			type: String,
 			trim: true,
+			default: "",
 		},
 		photo: {
-			data: Buffer,
-			contentType: String,
+			type: String,
+			default: "",
 		},
 	},
 	{ timestamps: true }

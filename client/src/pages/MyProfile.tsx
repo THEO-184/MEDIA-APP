@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { CreatedUser, CreateUser } from "../common/interfaces/api-interfaces";
+import {
+	CreatedUser,
+	CreateUser,
+	User,
+} from "../common/interfaces/api-interfaces";
 import {
 	useDeleteUserQuery,
 	useReadMyProfile,
@@ -11,7 +15,7 @@ import Container from "../components/Container";
 import ProfileCard from "../components/ProfileCard";
 
 const MyProfile = () => {
-	const [user, setUser] = useState<CreatedUser>({} as CreatedUser);
+	const [user, setUser] = useState<User>({} as User);
 	const [userId, setUserId] = useState("");
 	const [isToastCompleted, setIsToastCompleted] = useState(false);
 

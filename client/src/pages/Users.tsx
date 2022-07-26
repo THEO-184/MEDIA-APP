@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "react-query";
-import { IoMdContact } from "react-icons/io";
+import DefaultImg from "../assets/images/profile-icon-png-899.png";
 import { BsArrowRight } from "react-icons/bs";
 import { Link, Outlet } from "react-router-dom";
 import { AxiosError } from "axios";
@@ -16,10 +15,12 @@ import { useFetchAllUsers } from "../common/queries/api-user";
 import { toast } from "react-toastify";
 
 const Users = () => {
+	const [totalUsers, setTotalUsers] = useState(0);
 	const [users, setUsers] = useState<User[]>([]);
 
 	const onSuccess = (res: FetchUsers) => {
 		setUsers(res.users);
+		setTotalUsers(res.count);
 	};
 	const { isLoading, data, error } = useFetchAllUsers(onSuccess);
 
@@ -33,31 +34,40 @@ const Users = () => {
 				{isLoading ? (
 					<h1>Loading..</h1>
 				) : (
-					data?.users.map((user) => {
-						return (
-							<Box key={user._id}>
-								<Link to={`/users/${user._id}`}>
-									<Box
-										className={`flex items-center justify-between hover:bg-slate-50`}
-									>
-										<Box className="flex items-center">
-											<IoMdContact size={"70"} />
-											<Typography
-												size="2xl"
-												color="primary-dark"
-												className="ml-5"
-											>
-												{user.name}
-											</Typography>
+					<>
+						<Typography color="primary-dark" size="lg">
+							Total Users: {totalUsers}
+						</Typography>
+						{data?.users.map((user) => {
+							return (
+								<Box key={user._id} className="mt-2">
+									<Link to={`/users/${user._id}`}>
+										<Box
+											className={`flex items-center justify-between hover:bg-slate-50`}
+										>
+											<Box className="flex items-center">
+												<img
+													src={user.photo || DefaultImg}
+													alt="user"
+													className="w-14 h-14 rounded-full"
+												/>
+												<Typography
+													size="2xl"
+													color="primary-dark"
+													className="ml-5"
+												>
+													{user.name}
+												</Typography>
+											</Box>
+											<Box className="cursor-pointer">
+												<BsArrowRight size={"50"} />
+											</Box>
 										</Box>
-										<Box className="cursor-pointer">
-											<BsArrowRight size={"50"} />
-										</Box>
-									</Box>
-								</Link>
-							</Box>
-						);
-					})
+									</Link>
+								</Box>
+							);
+						})}
+					</>
 				)}
 			</Card>
 		</Container>

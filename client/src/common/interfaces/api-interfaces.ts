@@ -4,7 +4,7 @@ export interface User {
 	name: string;
 	createdAt: string;
 	updatedAt: string;
-	photo: { data: any; contentType: any };
+	photo: string;
 }
 
 export interface FetchUsers {
@@ -19,7 +19,7 @@ export interface SignUp extends Pick<User, "name" | "email"> {
 export type CreatedUser = Omit<User, "updatedAt" | "photo">;
 export interface CreateUser {
 	status: boolean;
-	user: CreatedUser;
+	user: User;
 }
 
 export type createUserFn = (res: CreateUser) => void;

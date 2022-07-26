@@ -2,6 +2,7 @@ import express from "express";
 import "express-async-errors";
 import dotenv from "dotenv";
 dotenv.config();
+const cloudinary = require("cloudinary").v2;
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileUpload";
@@ -10,7 +11,6 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import { StatusCodes } from "http-status-codes";
-import path from "path";
 // local imports
 import connectDb from "./db/connectDb";
 import Template from "./template";
@@ -21,8 +21,13 @@ const app = express();
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
 //
-const CURRENT_WORKING_DIR = process.cwd();
-const corsOptions = {};
+
+// cloudinary
+cloudinary.config({
+	api_key: process.env.CLOUD_KEY,
+	api_secret: process.env.CLOUD_SECRET,
+	cloud_name: "dolgpezth",
+});
 
 app.use(morgan("tiny"));
 app.use(bodyParser.urlencoded({ extended: true }));
