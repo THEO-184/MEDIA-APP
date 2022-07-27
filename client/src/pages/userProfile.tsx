@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
 // ==== LOCAL IMPORTS
 import Card from "../components/Card";
 import Container from "../components/Container";
@@ -16,11 +15,14 @@ import { useAuth } from "../components/AppContext";
 import Box from "../components/Box";
 import { TabId, Tabs } from "../utils/utilities";
 import TabsComponent from "../components/Tabs";
+import DefaultImg from "../assets/images/profile-icon-png-899.png";
+import Typography from "../components/Typography";
 
 const UserProfile = () => {
 	const { id } = useParams();
 	const auth = useAuth();
 	const [person, setPerson] = useState<User>({} as User);
+	const [people, setPeople] = useState<User["followers" | "following"]>([]);
 	const [isFollowing, setIsFollowing] = useState(false);
 	const [tabId, setTabId] = useState(TabId.Tab2);
 
@@ -29,9 +31,13 @@ const UserProfile = () => {
 		const isFollowUser = res.user.followers.some(
 			(follower) => follower._id === auth?._id
 		);
+		setPeople(res.user.followers);
 		setIsFollowing(isFollowUser);
 	};
-	const { isLoading, error, isError } = useReadUserProfileQuery(id, onSuccess);
+	const { isLoading, error, isError, data } = useReadUserProfileQuery(
+		id,
+		onSuccess
+	);
 
 	const onFollowSuccess = (res: CreateUser) => onSuccess(res);
 	const unFollowSuccess = onFollowSuccess;
@@ -42,9 +48,17 @@ const UserProfile = () => {
 	// ===EVENTS ===
 
 	const handleSetActiveTab = (id: TabId) => {
-		console.log("tab", id, typeof id);
 		setTabId(id);
+		if (id == TabId.Tab3) {
+			setPeople(person.following);
+		} else {
+			setPeople(person.followers);
+		}
 	};
+
+	if (data) {
+		console.log(data);
+	}
 
 	if (isError) {
 		const axiosErr: any = error;
@@ -70,6 +84,24 @@ const UserProfile = () => {
 					handleSetActiveTab={handleSetActiveTab}
 					tabId={tabId}
 				/>
+				<Box className="flex w-full items-center justify-center my-7">
+					{people.map((person) => {
+						return (
+							<div key={person._id} className="text-center mx-3">
+								<div>
+									<img
+										src={person.photo || DefaultImg}
+										alt={person.name}
+										className="w-20 h-20 rounded-full"
+									/>
+								</div>
+								<h3 className="text-indigo-900 text-xl font-semibold">
+									{person.name}
+								</h3>
+							</div>
+						);
+					})}
+				</Box>
 			</Card>
 		</Container>
 	);

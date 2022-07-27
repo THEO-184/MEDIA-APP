@@ -10,6 +10,7 @@ interface Props {
 	handleSetActiveTab: ChangeTabFn;
 }
 
+// Tabs compomemt
 const TabsComponent = (props: Props) => {
 	const { Tabs, handleSetActiveTab, tabId } = props;
 	return (
