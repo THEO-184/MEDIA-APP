@@ -9,6 +9,7 @@ import { readUserProfile } from "../services/user.services";
 import {
 	useFollowUser,
 	useReadUserProfileQuery,
+	useUnFollowPerson,
 } from "../common/queries/api-user";
 import {
 	CreatedUser,
@@ -35,22 +36,17 @@ const UserProfile = () => {
 	const { isLoading } = useReadUserProfileQuery(id, onSuccess);
 
 	const onFollowSuccess = (res: CreateUser) => onSuccess(res);
+	const unFollowSuccess = onFollowSuccess;
 
-	const {
-		mutate: handleFollowUser,
-		data,
-		isSuccess,
-	} = useFollowUser(onFollowSuccess);
-
-	if (data) {
-		console.log("follow", data);
-	}
+	const { mutate: handleFollowUser } = useFollowUser(onFollowSuccess);
+	const { mutate: handleUnFollowUser } = useUnFollowPerson(unFollowSuccess);
 
 	return (
 		<Container>
 			<Card title="Profile" width="w-[500px]">
 				<ProfileCard
 					handleFollowUser={handleFollowUser}
+					handleUnFollowUser={handleUnFollowUser}
 					isFollowing={isFollowing}
 					user={person}
 					isLoading={isLoading}

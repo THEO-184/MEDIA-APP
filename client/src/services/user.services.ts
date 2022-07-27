@@ -56,3 +56,8 @@ export const followPerson = async (id: any): Promise<CreateUser> => {
 	const res = await api.put("/users/follow", { id });
 	return res.data;
 };
+
+export const unFollowPerson = async (id: any): Promise<CreateUser> => {
+	const res = await api.put("/users/unfollow", { id });
+	return res.data;
+};
