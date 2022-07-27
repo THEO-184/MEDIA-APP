@@ -21,7 +21,7 @@ export const createUser: RequestHandler<any, any, UserDocument> = async (
 };
 
 export const getAllUsers: RequestHandler = async (req, res) => {
-	const users = await User.find().select("-password -__v");
+	const users = await User.find().select("-password -__v").sort("createdAt");
 
 	res.status(StatusCodes.OK).json({ count: users.length, users });
 };
@@ -30,8 +30,8 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 	const { _id } = req.user;
 	const user = await User.findOne({ _id })
 		.select("-password -__v")
-		.populate("following", "_id name")
-		.populate("followers", "_id name");
+		.populate("following", "_id name photo")
+		.populate("followers", "_id name photo");
 	if (!user) {
 		throw new NotFound("no user found");
 	}
@@ -137,8 +137,8 @@ export const addFollower = async (
 		{ new: true, runValidators: true }
 	)
 		.select("-password -__v")
-		.populate("followers", "_id name")
-		.populate("following", "_id name");
+		.populate("followers", "_id name photo")
+		.populate("following", "_id name photo");
 	if (!user) {
 		throw new NotFound(`no user forund with id: ${req.body.id}`);
 	}
@@ -168,8 +168,8 @@ export const removeFollower = async (
 		{ new: true, runValidators: true }
 	)
 		.select("-password -__v")
-		.populate("followers", "_id name")
-		.populate("following", "_id name");
+		.populate("followers", "_id name photo")
+		.populate("following", "_id name photo");
 	if (!user) {
 		throw new NotFound(`no user forund with id: ${req.body.id}`);
 	}

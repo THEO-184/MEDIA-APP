@@ -1,13 +1,15 @@
-export interface User {
-	email: string;
+interface Follower {
 	_id: string;
 	name: string;
+	photo: string;
+}
+export interface User extends Follower {
+	email: string;
 	about: string;
 	createdAt: string;
 	updatedAt: string;
-	photo: string;
-	following: { _id: string; name: string }[];
-	followers: { _id: string; name: string }[];
+	following: Follower[];
+	followers: Follower[];
 }
 
 export interface FetchUsers {
