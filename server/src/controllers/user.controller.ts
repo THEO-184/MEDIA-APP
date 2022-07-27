@@ -143,7 +143,7 @@ export const addFollower = async (
 		throw new NotFound(`no user forund with id: ${req.body.id}`);
 	}
 
-	res.status(StatusCodes.OK).json({ user });
+	res.status(StatusCodes.OK).json({ status: true, user });
 };
 
 export const removeFollowing = async (
@@ -174,5 +174,5 @@ export const removeFollower = async (
 		throw new NotFound(`no user forund with id: ${req.body.id}`);
 	}
 
-	res.status(StatusCodes.OK).json({ user });
+	res.status(StatusCodes.OK).json({ status: true, user });
 };

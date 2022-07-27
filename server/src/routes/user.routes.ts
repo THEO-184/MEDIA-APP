@@ -19,12 +19,13 @@ router.route("/").get(getAllUsers).post(createUser);
 
 router.route("/showMe").get(authMiddleware, getCurrentUser);
 
+router.route("/follow").put(authMiddleware, addFollowing, addFollower);
+router.route("/unfollow").put(authMiddleware, removeFollower, removeFollower);
+
 router
 	.route("/:id")
 	.get(authMiddleware, getUserById)
 	.put(authMiddleware, updateUser)
 	.delete(authMiddleware, deleteUser);
 
-router.route("/follow").put(authMiddleware, addFollowing, addFollower);
-router.route("/unfollow").put(authMiddleware, removeFollower, removeFollower);
 export default router;
