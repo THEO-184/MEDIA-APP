@@ -16,6 +16,7 @@ type DeleteFn = (id: string) => void;
 type MutationFn = UseMutateFunction<CreateUser, unknown, any, unknown>;
 interface Props {
 	handleFollowUser?: MutationFn;
+	handleUnFollowUser?: MutationFn;
 	isFollowing?: boolean;
 	user: User;
 	isLoading: boolean;
@@ -25,6 +26,7 @@ interface Props {
 
 const ProfileCard = ({
 	handleFollowUser,
+	handleUnFollowUser,
 	isFollowing,
 	user,
 	isLoading,
@@ -81,7 +83,11 @@ const ProfileCard = ({
 				) : (
 					<Box className="w-">
 						{isFollowing ? (
-							<Button color="green" variant="filled">
+							<Button
+								color="green"
+								variant="filled"
+								onClick={() => handleUnFollowUser!(user._id)}
+							>
 								UnFollow
 							</Button>
 						) : (
