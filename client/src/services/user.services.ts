@@ -51,3 +51,8 @@ export const signOut = async (): Promise<{ msg: string }> => {
 	const res = await api.get("/auth/signout");
 	return res.data;
 };
+
+export const followPerson = async (id: any): Promise<CreateUser> => {
+	const res = await api.put("/users/follow", { id });
+	return res.data;
+};

@@ -7,14 +7,18 @@ import { findUserService } from "../services/user.services";
 import { UserInput } from "../types/userTypes";
 import { attachCookies } from "../utils/jwt";
 
-export const signIn: RequestHandler<any, any, UserInput> = async (req, res) => {
+export const signIn: RequestHandler<
+	any,
+	any,
+	Pick<UserInput, "email" | "password">
+> = async (req, res) => {
 	const { email, password } = req.body;
 
 	if (!email || !password) {
 		throw new BadRequestErr("provide email and password");
 	}
 
-	const user = await User.findOne({ email }).select("name email");
+	const user = await User.findOne({ email });
 	if (!user) {
 		throw new Unauthenticated("user not authenticated");
 	}
@@ -24,7 +28,9 @@ export const signIn: RequestHandler<any, any, UserInput> = async (req, res) => {
 	}
 
 	attachCookies(res, { _id: user._id, name: user.name });
-	res.status(StatusCodes.OK).json({ user });
+	res
+		.status(StatusCodes.OK)
+		.json({ user: { _id: user._id, name: user.name, email: user.email } });
 };
 
 export const signOut: RequestHandler = async (req, res) => {

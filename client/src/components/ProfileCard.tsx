@@ -1,5 +1,5 @@
 import React from "react";
-import { User } from "../common/interfaces/api-interfaces";
+import { CreateUser, User } from "../common/interfaces/api-interfaces";
 import DefaultImg from "../assets/images/profile-icon-png-899.png";
 
 import { MdEdit, MdDelete } from "react-icons/md";
@@ -10,9 +10,13 @@ import Typography from "./Typography";
 import Button from "./Button";
 import { Link } from "react-router-dom";
 import { useAuth } from "./AppContext";
+import { UseMutateFunction } from "react-query";
 
 type DeleteFn = (id: string) => void;
+type MutationFn = UseMutateFunction<CreateUser, unknown, any, unknown>;
 interface Props {
+	handleFollowUser?: MutationFn;
+	isFollowing?: boolean;
 	user: User;
 	isLoading: boolean;
 	isLoggedInUser: Boolean;
@@ -20,6 +24,8 @@ interface Props {
 }
 
 const ProfileCard = ({
+	handleFollowUser,
+	isFollowing,
 	user,
 	isLoading,
 	isLoggedInUser,
@@ -27,15 +33,10 @@ const ProfileCard = ({
 }: Props) => {
 	const { createdAt, email, name, _id, photo } = user;
 	const date = new Date(createdAt).toDateString();
-	const auth = useAuth();
 
 	if (isLoading) {
 		return <Box>Loading...</Box>;
 	}
-
-	const isFollowUser = user.followers.some(
-		(follower) => follower._id === auth?._id
-	);
 
 	return (
 		<Box>
@@ -79,12 +80,17 @@ const ProfileCard = ({
 					</div>
 				) : (
 					<Box className="w-">
-						{isFollowUser ? (
+						{isFollowing ? (
 							<Button color="green" variant="filled">
 								UnFollow
 							</Button>
 						) : (
-							<Button variant="filled">Follow</Button>
+							<Button
+								variant="filled"
+								onClick={() => handleFollowUser!(user._id)}
+							>
+								Follow
+							</Button>
 						)}
 					</Box>
 				)}

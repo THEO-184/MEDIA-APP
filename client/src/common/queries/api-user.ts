@@ -8,6 +8,7 @@ import {
 	updateProfile,
 	deleteUser,
 	signOut,
+	followPerson,
 } from "../../services/user.services";
 import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
@@ -61,6 +62,10 @@ export const useDeleteUserQuery = (id: string, onSuccess?: () => void) => {
 
 export const useSignOutQuery = () => {
 	return useQuery("signout", signOut, { enabled: false });
+};
+
+export const useFollowUser = (onFollowSuccess: createUserFn) => {
+	return useMutation(followPerson, { onSuccess: onFollowSuccess });
 };
 
 export default api;
