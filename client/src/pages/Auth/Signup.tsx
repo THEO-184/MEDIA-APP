@@ -12,7 +12,7 @@ import Container from "../../components/Container";
 import TextField from "../../components/TextField";
 import { CreateUser } from "../../common/interfaces/api-interfaces";
 import { useCreatUserQuery } from "../../common/queries/api-user";
-import { FormSchema } from "../../utils/formSchema";
+import { FormSchema } from "../../utils/utilities";
 
 type FormData = z.infer<typeof FormSchema>;
 

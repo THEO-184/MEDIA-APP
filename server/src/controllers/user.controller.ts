@@ -67,34 +67,34 @@ export const updateUser: RequestHandler<
 	if (!user) {
 		throw new NotFound(`no user with id : ${req.params.id} was found`);
 	}
-	if (!req.files) {
-		throw new BadRequestErr("please add image");
+
+	if (req.files) {
+		const userProfile = req.files!.image as UploadedFile;
+		// check file type
+		if (!userProfile.mimetype.startsWith("image")) {
+			throw new BadRequestErr("file type should be image");
+		}
+		// check file size
+		const maxSize = 1024 * 1024; // extract data fom form
+		// if (maxSize > userProfile.size) {
+		// 	throw new BadRequestErr("image size should be atmost 1kb");
+		// }
+		const imgFile: any = await cloudinary.uploader.upload(
+			userProfile.tempFilePath,
+			{
+				use_filename: true,
+				folder: "MERN-SOCIAL/Profile-photos",
+			}
+		);
+		user.photo = imgFile.secure_url;
 	}
-	const userProfile = req.files.image as UploadedFile;
-	// check file type
-	if (!userProfile.mimetype.startsWith("image")) {
-		throw new BadRequestErr("file type should be image");
-	}
-	// check file size
-	const maxSize = 1024 * 1024; // extract data fom form
-	// if (maxSize > userProfile.size) {
-	// 	throw new BadRequestErr("image size should be atmost 1kb");
-	// }
 
 	checkPermission(req.user, user);
-	const imgFile: any = await cloudinary.uploader.upload(
-		userProfile.tempFilePath,
-		{
-			use_filename: true,
-			folder: "MERN-SOCIAL/Profile-photos",
-		}
-	);
 
 	user.name = req.body.name;
 	user.password = req.body.password;
 	user.email = req.body.email;
 	user.about = req.body.about;
-	user.photo = imgFile.secure_url;
 	await user.save();
 
 	res

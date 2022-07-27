@@ -10,6 +10,7 @@ import {
 	useDeleteUserQuery,
 	useReadMyProfile,
 } from "../common/queries/api-user";
+import Box from "../components/Box";
 import Card from "../components/Card";
 import Container from "../components/Container";
 import ProfileCard from "../components/ProfileCard";
@@ -44,13 +45,14 @@ const MyProfile = () => {
 
 	return (
 		<Container>
-			<Card title="My Profile" width="w-[500px]">
+			<Card title="My Profile" width="w-11/12">
 				<ProfileCard
 					user={user}
 					isLoading={isLoading}
 					isLoggedInUser={true}
 					handleDelete={handleDelete}
 				/>
+				<Box></Box>
 			</Card>
 		</Container>
 	);

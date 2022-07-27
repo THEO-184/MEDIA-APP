@@ -19,7 +19,7 @@ import {
 	CreateUser,
 	SignUp,
 } from "../common/interfaces/api-interfaces";
-import { FormSchema } from "../utils/formSchema";
+import { FormSchema } from "../utils/utilities";
 import api, {
 	useReadMyProfile,
 	useReadUserProfileQuery,
@@ -33,9 +33,15 @@ const EditProfile = () => {
 	const { id } = useParams();
 	const [photoDetails, setPhotoDetails] = useState<File>({} as File);
 	const auth = useAuth();
-	const [userDetails, setUserData] = useState<CreatedUser>({} as CreatedUser);
+	const [userDetails, setUserData] = useState<CreateUser>({} as CreateUser);
 	const [profileUrl, setProfileUrl] = useState("");
 
+	const onSuccess = (res: CreateUser) => {
+		setUserData(res);
+		setProfileUrl(res.user.photo);
+	};
+
+	const { data } = useReadMyProfile(onSuccess);
 	const {
 		handleSubmit,
 		control,
@@ -44,8 +50,9 @@ const EditProfile = () => {
 	} = useForm<FormDataType>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			email: auth ? auth.email : "",
-			name: auth ? auth.name : "",
+			email: data?.user.email || "",
+			about: data?.user.about || "",
+			name: data?.user.name || "",
 			password: "",
 		},
 	});
@@ -53,15 +60,9 @@ const EditProfile = () => {
 	//
 	const queryClient = useQueryClient();
 
-	const onSuccess = (res: CreateUser) => {
-		setProfileUrl(res.user.photo);
-	};
-	const { data } = useReadMyProfile(onSuccess);
-
 	const {
 		data: message,
 		mutate,
-		isError,
 		isLoading,
 	} = useMutation(
 		async (userData: FormData): Promise<{ msg: string }> => {
@@ -96,10 +97,12 @@ const EditProfile = () => {
 		data.name && userData.append("name", data.name);
 		data.email && userData.append("email", data.email);
 		data.password && userData.append("password", data.password);
+		data.about && userData.append("about", data.about);
 		photoDetails.name && userData.append("image", photoDetails);
 		mutate(userData);
 		reset({
 			name: "",
+			about: "",
 			email: "",
 			password: "",
 		});
@@ -150,6 +153,21 @@ const EditProfile = () => {
 					/>
 					{errors.name && (
 						<p className="text-red-500 text-sm mb-1">{errors.name.message}</p>
+					)}
+					<Controller
+						name="about"
+						control={control}
+						render={({ field }) => (
+							<TextField
+								{...field}
+								variant="filled"
+								disabled={isLoading}
+								placeholder="About"
+							/>
+						)}
+					/>
+					{errors.about && (
+						<p className="text-red-500 text-sm mb-1">{errors.about.message}</p>
 					)}
 					<Controller
 						name="email"

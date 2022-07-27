@@ -17,6 +17,7 @@ import { useAuth } from "../components/AppContext";
 
 const Users = () => {
 	const [totalUsers, setTotalUsers] = useState(0);
+	const [users, setUsers] = useState<User[]>([]);
 	const auth = useAuth();
 
 	const onSuccess = (res: FetchUsers) => {

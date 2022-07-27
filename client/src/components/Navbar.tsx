@@ -11,10 +11,8 @@ const Navbar = () => {
 	const auth = useAuth();
 	const { data, isSuccess, refetch } = useSignOutQuery();
 
-	console.log("auth", auth);
-
 	const handleSignOut = () => {
-		// refetch();
+		refetch();
 		localStorage.removeItem("user");
 	};
 	if (isSuccess) {

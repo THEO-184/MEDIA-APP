@@ -39,10 +39,9 @@ const ProfileCard = ({
 	if (isLoading) {
 		return <Box>Loading...</Box>;
 	}
-
 	return (
 		<Box>
-			<Box className="flex items-center justify-between w-full mb-3 w-">
+			<Box className="flex items-center justify-between w-full mb-3">
 				<Box className="flex items-center justify-between ">
 					<img
 						src={photo || DefaultImg}
@@ -102,7 +101,10 @@ const ProfileCard = ({
 				)}
 			</Box>
 			<hr />
-			<h1 className="mt-2">Joined: {date}</h1>
+			<div className="mt-1">
+				<h3 className="font-bold text-base text-slate-900">{user.about}</h3>
+				<h1 className="mt-2 font-light">Joined: {date}</h1>
+			</div>
 		</Box>
 	);
 };
