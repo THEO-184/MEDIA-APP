@@ -1,24 +1,35 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-	CreatedUser,
-	CreateUser,
-	User,
-} from "../common/interfaces/api-interfaces";
+import useFollowUnfollowhook from "../common/hooks/useFollowUnfollowhook";
+import { CreateUser, User } from "../common/interfaces/api-interfaces";
 import {
 	useDeleteUserQuery,
 	useReadMyProfile,
 } from "../common/queries/api-user";
-import Box from "../components/Box";
 import Card from "../components/Card";
+import { Tabs } from "../utils/utilities";
 import Container from "../components/Container";
 import ProfileCard from "../components/ProfileCard";
+import TabsComponent from "../components/Tabs";
+import Box from "../components/Box";
+import DefaultImg from "../assets/images/profile-icon-png-899.png";
 
 const MyProfile = () => {
-	const [user, setUser] = useState<User>({} as User);
-	const [userId, setUserId] = useState("");
 	const [isToastCompleted, setIsToastCompleted] = useState(false);
+	const [
+		handleUnFollowUser,
+		handleSetActiveTab,
+		onSuccess,
+		isFollowing,
+		person,
+		people,
+		userId,
+		handleFollowUser,
+		tabId,
+		setTabId,
+		setPeople,
+	] = useFollowUnfollowhook();
 
 	const { mutate, data, isLoading: isDeleting } = useDeleteUserQuery(userId);
 
@@ -26,10 +37,6 @@ const MyProfile = () => {
 		mutate();
 	};
 
-	const onSuccess = (res: CreateUser) => {
-		setUser(res.user);
-		setUserId(res.user._id);
-	};
 	const { isLoading } = useReadMyProfile(onSuccess);
 	if (data) {
 		toast.success(data.msg, {
@@ -47,12 +54,37 @@ const MyProfile = () => {
 		<Container>
 			<Card title="My Profile" width="w-11/12">
 				<ProfileCard
-					user={user}
+					user={person}
 					isLoading={isLoading}
 					isLoggedInUser={true}
+					isFollowing={isFollowing}
 					handleDelete={handleDelete}
+					handleFollowUser={handleFollowUser}
+					handleUnFollowUser={handleUnFollowUser}
 				/>
-				<Box></Box>
+				<TabsComponent
+					Tabs={Tabs}
+					handleSetActiveTab={handleSetActiveTab}
+					tabId={tabId}
+				/>
+				<Box className="flex w-full items-center justify-center my-7">
+					{people.map((person) => {
+						return (
+							<div key={person._id} className="text-center mx-3">
+								<div>
+									<img
+										src={person.photo || DefaultImg}
+										alt={person.name}
+										className="w-20 h-20 rounded-full"
+									/>
+								</div>
+								<h3 className="text-indigo-900 text-xl font-semibold">
+									{person.name}
+								</h3>
+							</div>
+						);
+					})}
+				</Box>
 			</Card>
 		</Container>
 	);

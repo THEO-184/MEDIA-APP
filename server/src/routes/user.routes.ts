@@ -9,6 +9,7 @@ import {
 	addFollower,
 	addFollowing,
 	removeFollowing,
+	findPeopleToFollow,
 	removeFollower,
 } from "./../controllers/user.controller";
 import { authMiddleware } from "../middlewares/authMiddleware";
@@ -20,7 +21,8 @@ router.route("/").get(getAllUsers).post(createUser);
 router.route("/showMe").get(authMiddleware, getCurrentUser);
 
 router.route("/follow").put(authMiddleware, addFollowing, addFollower);
-router.route("/unfollow").put(authMiddleware, removeFollower, removeFollower);
+router.route("/unfollow").put(authMiddleware, removeFollowing, removeFollower);
+router.route("/findpeople").get(authMiddleware, findPeopleToFollow);
 
 router
 	.route("/:id")
