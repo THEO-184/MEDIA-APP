@@ -1,60 +1,37 @@
-import React, { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 // ==== LOCAL IMPORTS
 import Card from "../components/Card";
 import Container from "../components/Container";
 
-import {
-	useFollowUser,
-	useReadUserProfileQuery,
-	useUnFollowPerson,
-} from "../common/queries/api-user";
-import { CreateUser, User } from "../common/interfaces/api-interfaces";
+import { useReadUserProfileQuery } from "../common/queries/api-user";
+
 import ProfileCard from "../components/ProfileCard";
-import { useAuth } from "../components/AppContext";
 import Box from "../components/Box";
-import { TabId, Tabs } from "../utils/utilities";
+import { Tabs } from "../utils/utilities";
 import TabsComponent from "../components/Tabs";
 import DefaultImg from "../assets/images/profile-icon-png-899.png";
-import Typography from "../components/Typography";
+import useFollowUnfollowhook from "../common/hooks/useFollowUnfollowhook";
 
 const UserProfile = () => {
 	const { id } = useParams();
-	const auth = useAuth();
-	const [person, setPerson] = useState<User>({} as User);
-	const [people, setPeople] = useState<User["followers" | "following"]>([]);
-	const [isFollowing, setIsFollowing] = useState(false);
-	const [tabId, setTabId] = useState(TabId.Tab2);
+	const [
+		handleUnFollowUser,
+		handleSetActiveTab,
+		onSuccess,
+		isFollowing,
+		person,
+		people,
+		userId,
+		handleFollowUser,
+		tabId,
+		setTabId,
+		setPeople,
+	] = useFollowUnfollowhook();
 
-	const onSuccess = (res: CreateUser) => {
-		setPerson(res.user);
-		const isFollowUser = res.user.followers.some(
-			(follower) => follower._id === auth?._id
-		);
-		setPeople(res.user.followers);
-		setIsFollowing(isFollowUser);
-	};
 	const { isLoading, error, isError, data } = useReadUserProfileQuery(
 		id,
 		onSuccess
 	);
-
-	const onFollowSuccess = (res: CreateUser) => onSuccess(res);
-	const unFollowSuccess = onFollowSuccess;
-
-	const { mutate: handleFollowUser } = useFollowUser(onFollowSuccess);
-	const { mutate: handleUnFollowUser } = useUnFollowPerson(unFollowSuccess);
-
-	// ===EVENTS ===
-
-	const handleSetActiveTab = (id: TabId) => {
-		setTabId(id);
-		if (id == TabId.Tab3) {
-			setPeople(person.following);
-		} else {
-			setPeople(person.followers);
-		}
-	};
 
 	if (data) {
 		console.log(data);

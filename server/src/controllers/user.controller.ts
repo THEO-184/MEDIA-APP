@@ -176,3 +176,18 @@ export const removeFollower = async (
 
 	res.status(StatusCodes.OK).json({ status: true, user });
 };
+
+export const findPeopleToFollow = async (req: Request, res: Response) => {
+	const user = await User.findOne({ _id: req.user._id });
+	if (!user) {
+		throw new NotFound(`no user found with id : ${req.user._id}`);
+	}
+	let following = user.following;
+	following.push(req.user._id);
+
+	const usersToFollow = await User.find({ _id: { $nin: { following } } });
+
+	res
+		.status(StatusCodes.OK)
+		.json({ count: usersToFollow.length, users: usersToFollow });
+};
