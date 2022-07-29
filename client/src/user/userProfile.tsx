@@ -9,8 +9,8 @@ import ProfileCard from "../components/ProfileCard";
 import Box from "../components/Box";
 import { Tabs } from "../utils/utilities";
 import TabsComponent from "../components/Tabs";
-import DefaultImg from "../assets/images/profile-icon-png-899.png";
 import useFollowUnfollowhook from "../common/hooks/useFollowUnfollowhook";
+import ViewUsers from "./components/viewUsers";
 
 const UserProfile = () => {
 	const { id } = useParams();
@@ -33,13 +33,8 @@ const UserProfile = () => {
 		onSuccess
 	);
 
-	if (data) {
-		console.log(data);
-	}
-
 	if (isError) {
 		const axiosErr: any = error;
-
 		if (axiosErr.response.request.status === 401) {
 			return <Navigate to={"/signin"} />;
 		}
@@ -61,24 +56,7 @@ const UserProfile = () => {
 					handleSetActiveTab={handleSetActiveTab}
 					tabId={tabId}
 				/>
-				<Box className="flex w-full items-center justify-center my-7">
-					{people.map((person) => {
-						return (
-							<div key={person._id} className="text-center mx-3">
-								<div>
-									<img
-										src={person.photo || DefaultImg}
-										alt={person.name}
-										className="w-20 h-20 rounded-full"
-									/>
-								</div>
-								<h3 className="text-indigo-900 text-xl font-semibold">
-									{person.name}
-								</h3>
-							</div>
-						);
-					})}
-				</Box>
+				<ViewUsers people={people} />
 			</Card>
 		</Container>
 	);

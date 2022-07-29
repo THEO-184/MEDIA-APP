@@ -8,12 +8,13 @@ import {
 	useReadMyProfile,
 } from "../common/queries/api-user";
 import Card from "../components/Card";
-import { Tabs } from "../utils/utilities";
+import { TabId, Tabs } from "../utils/utilities";
 import Container from "../components/Container";
 import ProfileCard from "../components/ProfileCard";
 import TabsComponent from "../components/Tabs";
 import Box from "../components/Box";
 import DefaultImg from "../assets/images/profile-icon-png-899.png";
+import ViewUsers from "../user/components/viewUsers";
 
 const MyProfile = () => {
 	const [isToastCompleted, setIsToastCompleted] = useState(false);
@@ -31,7 +32,7 @@ const MyProfile = () => {
 		setPeople,
 	] = useFollowUnfollowhook();
 
-	const { mutate, data, isLoading: isDeleting } = useDeleteUserQuery(userId);
+	const { mutate, data } = useDeleteUserQuery(userId);
 
 	const handleDelete = () => {
 		mutate();
@@ -49,6 +50,13 @@ const MyProfile = () => {
 	if (isToastCompleted) {
 		return <Navigate to={"/"} />;
 	}
+	const profileTabs: typeof Tabs = [
+		...Tabs,
+		{
+			id: TabId.Tab4,
+			name: "WHO TO FOLLOW",
+		},
+	];
 
 	return (
 		<Container>
@@ -63,28 +71,11 @@ const MyProfile = () => {
 					handleUnFollowUser={handleUnFollowUser}
 				/>
 				<TabsComponent
-					Tabs={Tabs}
+					Tabs={profileTabs}
 					handleSetActiveTab={handleSetActiveTab}
 					tabId={tabId}
 				/>
-				<Box className="flex w-full items-center justify-center my-7">
-					{people.map((person) => {
-						return (
-							<div key={person._id} className="text-center mx-3">
-								<div>
-									<img
-										src={person.photo || DefaultImg}
-										alt={person.name}
-										className="w-20 h-20 rounded-full"
-									/>
-								</div>
-								<h3 className="text-indigo-900 text-xl font-semibold">
-									{person.name}
-								</h3>
-							</div>
-						);
-					})}
-				</Box>
+				<ViewUsers people={people} />
 			</Card>
 		</Container>
 	);
