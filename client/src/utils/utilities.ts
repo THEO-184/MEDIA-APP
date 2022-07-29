@@ -20,10 +20,11 @@ export enum TabId {
 	Tab1 = 1,
 	Tab2 = 2,
 	Tab3 = 3,
+	Tab4 = 4,
 }
 
 export interface TabsType {
-	name: "POSTS" | "FOLLOWERS" | "FOLLOWING";
+	name: "POSTS" | "FOLLOWERS" | "FOLLOWING" | "WHO TO FOLLOW";
 	id: TabId;
 }
 

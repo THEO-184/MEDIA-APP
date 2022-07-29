@@ -35,6 +35,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 	if (!user) {
 		throw new NotFound("no user found");
 	}
+
 	checkPermission(req.user, user);
 	res.status(StatusCodes.OK).json({
 		user,
@@ -191,5 +192,5 @@ export const findPeopleToFollow = async (req: Request, res: Response) => {
 
 	res
 		.status(StatusCodes.OK)
-		.json({ count: usersToFollow.length, users: usersToFollow });
+		.json({ count: usersToFollow.length, usersToFollow });
 };
