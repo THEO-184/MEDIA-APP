@@ -1,4 +1,3 @@
-import { generatePath } from "react-router-dom";
 import api from "../common/queries/api-user";
 import {
 	CreatedUser,
@@ -59,5 +58,10 @@ export const followPerson = async (id: any): Promise<CreateUser> => {
 
 export const unFollowPerson = async (id: any): Promise<CreateUser> => {
 	const res = await api.put("/users/unfollow", { id });
+	return res.data;
+};
+
+export const findPeople = async (): Promise<FetchUsers> => {
+	const res = await api.get("/users/findpeople");
 	return res.data;
 };

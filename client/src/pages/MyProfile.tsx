@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import useFollowUnfollowhook from "../common/hooks/useFollowUnfollowhook";
 import {
 	useDeleteUserQuery,
+	useFindPeople,
 	useReadMyProfile,
 } from "../common/queries/api-user";
 import Card from "../components/Card";
@@ -31,15 +32,20 @@ const MyProfile = () => {
 		setPeople,
 	] = useFollowUnfollowhook();
 
-	const { mutate, data } = useDeleteUserQuery(userId);
+	const { mutate, data: DeletedUser } = useDeleteUserQuery(userId);
+	const { data: peopleToFollow } = useFindPeople();
+
+	if (peopleToFollow) {
+		console.log("follow", peopleToFollow);
+	}
 
 	const handleDelete = () => {
 		mutate();
 	};
 
 	const { isLoading } = useReadMyProfile(onSuccess);
-	if (data) {
-		toast.success(data.msg, {
+	if (DeletedUser) {
+		toast.success(DeletedUser.msg, {
 			onClose(props) {
 				setIsToastCompleted(true);
 			},

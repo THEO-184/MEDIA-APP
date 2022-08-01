@@ -10,6 +10,7 @@ import {
 	signOut,
 	followPerson,
 	unFollowPerson,
+	findPeople,
 } from "../../services/user.services";
 import { useMutation, useQuery } from "react-query";
 import { generatePath } from "react-router-dom";
@@ -71,6 +72,10 @@ export const useFollowUser = (onFollowSuccess: createUserFn) => {
 
 export const useUnFollowPerson = (unFollowSuccess: createUserFn) => {
 	return useMutation(unFollowPerson, { onSuccess: unFollowSuccess });
+};
+
+export const useFindPeople = () => {
+	return useQuery("/findpeople", findPeople);
 };
 
 export default api;

@@ -187,10 +187,10 @@ export const findPeopleToFollow = async (req: Request, res: Response) => {
 	following.push(req.user._id);
 
 	const usersToFollow = await User.find({ _id: { $nin: following } }).select(
-		"name"
+		"name photo"
 	);
 
 	res
 		.status(StatusCodes.OK)
-		.json({ count: usersToFollow.length, usersToFollow });
+		.json({ count: usersToFollow.length, users: usersToFollow });
 };
