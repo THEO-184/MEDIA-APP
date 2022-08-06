@@ -60,8 +60,6 @@ export const updateUser: RequestHandler<
 	let user = await User.findOne({ _id: req.params.id });
 	const { email, name, password } = req.body;
 
-	console.log(req.body, req.files);
-
 	if (!email || !password || !name) {
 		throw new BadRequestErr("provide details to be updated");
 	}

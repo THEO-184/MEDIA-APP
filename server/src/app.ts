@@ -20,6 +20,7 @@ const app = express();
 // routes imports
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
+import postRoutes from "./routes/post.routes";
 //
 
 // cloudinary
@@ -47,9 +48,9 @@ app.get("/", (req, res) => {
 	res.status(StatusCodes.OK).send(Template());
 });
 
-// app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "public")));
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/posts", postRoutes);
 
 // middlewares
 

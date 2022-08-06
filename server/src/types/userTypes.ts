@@ -27,13 +27,12 @@ export interface UserDocument extends UserInput, mongoose.Document {
 	comparePassword(input: string): Promise<boolean>;
 }
 
+type FileUploadPath = "MERN-SOCIAL/Profile-photos" | "MERN-SOCIAL/posts-photos";
+
 type Upload = (
 	path: string,
-	{
-		use_filename,
-		folder,
-	}: { use_filename: boolean; folder: "MERN-SOCIAL/Profile-photos" }
-) => Object;
+	{ use_filename, folder }: { use_filename: boolean; folder: FileUploadPath }
+) => { secure_url: string };
 export interface Cloudinary {
 	uploader: {
 		upload: Upload;
