@@ -36,7 +36,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 		throw new NotFound("no user found");
 	}
 
-	checkPermission(req.user, user);
+	checkPermission(req.user, user._id);
 	res.status(StatusCodes.OK).json({
 		user,
 	});
@@ -88,7 +88,7 @@ export const updateUser: RequestHandler<
 		user.photo = imgFile.secure_url;
 	}
 
-	checkPermission(req.user, user);
+	checkPermission(req.user, user._id);
 
 	user.name = req.body.name;
 	user.password = req.body.password;
@@ -107,7 +107,7 @@ export const deleteUser: RequestHandler<{ id: string }> = async (req, res) => {
 	if (!user) {
 		throw new NotFound(`no user with id : ${req.params.id} was found`);
 	}
-	checkPermission(req.user, user);
+	checkPermission(req.user, user._id);
 
 	await user.remove();
 

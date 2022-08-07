@@ -21,6 +21,7 @@ const app = express();
 import userRoutes from "./routes/user.routes";
 import authRoutes from "./routes/auth.routes";
 import postRoutes from "./routes/post.routes";
+import { authMiddleware } from "./middlewares/authMiddleware";
 //
 
 // cloudinary
@@ -50,7 +51,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/posts", postRoutes);
+app.use("/api/v1/posts", authMiddleware, postRoutes);
 
 // middlewares
 

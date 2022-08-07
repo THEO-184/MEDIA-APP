@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { UserDocument } from "./userTypes";
 
-interface Post {
+export interface Post {
 	text: string;
 	photo: string;
 	postedBy: string;
