@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const post_controller_1 = require("../controllers/post.controller");
+const router = (0, express_1.Router)();
+router.route("/feed").get(post_controller_1.listNewsFeed);
+router.route("/new").post(post_controller_1.createPost);
+router.route("/like").put(post_controller_1.likePost);
+router.route("/unlike").put(post_controller_1.unLikePost);
+router.route("/comment").put(post_controller_1.commentOnPost);
+router.route("/:postId").delete(post_controller_1.deletePost);
+router.route("/by/:id").get(post_controller_1.postsByUser);
+exports.default = router;
