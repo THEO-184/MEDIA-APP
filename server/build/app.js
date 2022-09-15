@@ -23,6 +23,8 @@ const express_fileUpload_1 = __importDefault(require("express-fileUpload"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
+const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 const compression_1 = __importDefault(require("compression"));
 const http_status_codes_1 = require("http-status-codes");
 // local imports
@@ -52,6 +54,11 @@ app.use((0, cors_1.default)({
     credentials: true,
     origin: "http://localhost:3000",
 }));
+app.use((0, express_rate_limit_1.default)({
+    windowMs: 60 * 100 * 15,
+    max: 60,
+}));
+app.use((0, express_mongo_sanitize_1.default)());
 app.use((0, helmet_1.default)());
 app.get("/", (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).send((0, template_1.default)());

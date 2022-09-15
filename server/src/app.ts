@@ -5,10 +5,12 @@ dotenv.config();
 const cloudinary = require("cloudinary").v2;
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import fileUpload from "express-fileUpload";
+import fileUpload from "express-fileupload";
 import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
+import rateLimiter from "express-rate-limit";
+import mongooseSanitize from "express-mongo-sanitize";
 import compression from "compression";
 import { StatusCodes } from "http-status-codes";
 // local imports
@@ -43,6 +45,14 @@ app.use(
 		origin: "http://localhost:3000",
 	})
 );
+
+app.use(
+	rateLimiter({
+		windowMs: 60 * 100 * 15,
+		max: 60,
+	})
+);
+app.use(mongooseSanitize());
 app.use(helmet());
 
 app.get("/", (req, res) => {

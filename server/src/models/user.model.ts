@@ -63,7 +63,7 @@ UserSchema.methods.comparePassword = async function (
 	password: string
 ): Promise<boolean> {
 	let user = this as UserDocument;
-	const isMatch = bcrypt.compare(password, user.password);
+	const isMatch = await bcrypt.compare(password, user.password);
 	return isMatch;
 };
 
